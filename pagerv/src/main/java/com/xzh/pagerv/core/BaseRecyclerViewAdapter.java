@@ -112,6 +112,7 @@ public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
 
     /**
      * 还原到初始显示状态
+     *
      * @param needClearHeader 是否同时清空头部
      */
     public void resetUI(boolean needClearHeader) {
