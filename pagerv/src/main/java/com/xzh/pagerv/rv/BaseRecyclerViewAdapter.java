@@ -1,4 +1,4 @@
-package com.xzh.pagerv.core;
+package com.xzh.pagerv.rv;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,137 +15,7 @@ import java.util.List;
  * @param <T> 数据类型
  * @param <H> ViewHolder类型
  */
-public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter<BaseRecyclerViewAdapter.BaseViewHolder> {
-
-    /**
-     * 基础ViewHolder
-     */
-    public class BaseViewHolder extends RecyclerView.ViewHolder {
-
-        //设置点击的View缓存
-        private View clickView;
-
-        public BaseViewHolder(View view) {
-            super(view);
-        }
-
-        /**
-         * FindView
-         *
-         * @param id view id
-         * @return View
-         */
-        public <V> V findView(int id) {
-            return (V) itemView.findViewById(id);
-        }
-    }
-
-    //头尾相关=======================
-
-    /**
-     * Footer的ViewType类型
-     */
-    private final int VIEW_TYPE_FOOTER = -100;
-    /**
-     * Header的ViewType类型
-     */
-    private final int VIEW_TYPE_HEADER = -200;
-
-    private BaseViewHolder mFooterHolder;
-    private BaseViewHolder mHeaderHolder;
-
-    /**
-     * 设置FooterView,需要{@link #notifyDataSetChanged()},目前只支持单Footer主要是用于显示分页
-     *
-     * @param footer footer
-     */
-    public void setFooter(BaseViewHolder footer) {
-        mFooterHolder = footer;
-    }
-
-    /**
-     * 设置HeaderView,需要{@link #notifyDataSetChanged()},目前只支持单Header
-     *
-     * @param header header
-     */
-    public void setHeader(BaseViewHolder header) {
-        mHeaderHolder = header;
-    }
-
-    /**
-     * 是否是Footer
-     *
-     * @param position 数据位置
-     */
-    public boolean isFooter(int position) {
-        return mFooterHolder != null && position == getItemCount() - 1; //Footer存在并且是最后的数据了
-    }
-
-    /**
-     * 是否是Header
-     *
-     * @param position 数据位置
-     */
-    public boolean isHeader(int position) {
-        return mHeaderHolder != null && position == 0; //Header存在并且是第一个数据
-    }
-
-    /**
-     * Footer显示，分页需要重写判断是否到底
-     */
-    protected void onFooterShow() {
-    }
-
-    //数据相关=======================
-
-    //数据列表
-    private final List<T> OBJECTS = new ArrayList<>();
-
-    /**
-     * 列表
-     *
-     * @return 列表
-     */
-    public List<T> list() {
-        return OBJECTS;
-    }
-
-    /**
-     * 还原到初始显示状态
-     *
-     * @param needClearHeader 是否同时清空头部
-     */
-    public void resetUI(boolean needClearHeader) {
-        if (needClearHeader) {
-            setHeader(null);
-        }
-        setFooter(null);
-        list().clear();
-        notifyDataSetChanged();
-    }
-
-    //抽象方法=======================
-
-    /**
-     * 获取ViewHolder
-     *
-     * @param root  Holder绑定的View对象
-     * @param index 布局的Index
-     * @return ItemHolder
-     */
-    protected abstract BaseViewHolder getViewHolder(View root, int index);
-
-    /**
-     * 绑定数据
-     *
-     * @param holder   ItemHolder
-     * @param obj      数据对象
-     * @param position 数据位置
-     * @param index    布局的Index
-     */
-    protected abstract void bindView(H holder, T obj, int position, int index);
-
-    //适配器相关=======================
+public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter<BaseViewHolder> {
 
     private int[] layoutIDs;
     private int[] clickViewIDs;
@@ -260,5 +130,121 @@ public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
      * @param position 数据位置
      */
     protected void onItemClick(View view, T obj, int position) {
+    }
+
+    //抽象方法=======================
+
+    /**
+     * 获取ViewHolder
+     *
+     * @param root  Holder绑定的View对象
+     * @param index 布局的Index
+     * @return ItemHolder
+     */
+    protected abstract BaseViewHolder getViewHolder(View root, int index);
+
+    /**
+     * 绑定数据
+     *
+     * @param holder   ItemHolder
+     * @param obj      数据对象
+     * @param position 数据位置
+     * @param index    布局的Index
+     */
+    protected abstract void bindView(H holder, T obj, int position, int index);
+
+    //数据相关=======================
+
+    //数据列表
+    private final List<T> OBJECTS = new ArrayList<>();
+
+    /**
+     * 列表
+     *
+     * @return 列表
+     */
+    public List<T> list() {
+        return OBJECTS;
+    }
+
+    /**
+     * 还原到初始显示状态
+     *
+     * @param needClearHeader 是否同时清空头部
+     */
+    public void resetUI(boolean needClearHeader) {
+        if (needClearHeader) {
+            setHeader(null);
+        }
+        setFooter(null);
+        OBJECTS.clear();
+        notifyDataSetChanged();
+    }
+
+    //头尾相关=======================
+
+    /**
+     * Footer的ViewType类型
+     */
+    private final int VIEW_TYPE_FOOTER = -100;
+    /**
+     * Header的ViewType类型
+     */
+    private final int VIEW_TYPE_HEADER = -200;
+
+    private BaseViewHolder mFooterHolder;
+    private BaseViewHolder mHeaderHolder;
+
+    /**
+     * 设置FooterView,需要{@link #notifyDataSetChanged()},目前只支持单Footer主要是用于显示分页
+     *
+     * @param footer footer
+     */
+    public void setFooter(BaseViewHolder footer) {
+        mFooterHolder = footer;
+    }
+
+    /**
+     * 设置HeaderView,需要{@link #notifyDataSetChanged()},目前只支持单Header
+     *
+     * @param header header
+     */
+    public void setHeader(BaseViewHolder header) {
+        mHeaderHolder = header;
+    }
+
+    /**
+     * 是否是Footer
+     *
+     * @param position 数据位置
+     */
+    private boolean isFooter(int position) {
+        return mFooterHolder != null && position == getItemCount() - 1; //Footer存在并且是最后的数据了
+    }
+
+    /**
+     * 是否是Header
+     *
+     * @param position 数据位置
+     */
+    private boolean isHeader(int position) {
+        return mHeaderHolder != null && position == 0; //Header存在并且是第一个数据
+    }
+
+    private OnFooterShowListener onFooterShowListener;
+
+    /**
+     * Footer显示，分页需要重写判断是否到底
+     */
+    public void setOnFooterShowListener(OnFooterShowListener onFooterShowListener) {
+        this.onFooterShowListener = onFooterShowListener;
+    }
+
+    /**
+     * 尾部显示
+     */
+    private void onFooterShow() {
+        if (onFooterShowListener != null)
+            onFooterShowListener.onFooterShow();
     }
 }
