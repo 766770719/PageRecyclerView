@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
-import com.xzh.pagerv.rv.BaseRecyclerViewAdapter;
+import com.xzh.pagerv.rv.BaseViewHolder;
 
 /**
  * 基础FooterView
@@ -14,7 +14,7 @@ import com.xzh.pagerv.rv.BaseRecyclerViewAdapter;
 public abstract class BaseFooterView extends RelativeLayout {
 
     //Holder对象
-    private BaseRecyclerViewAdapter.BaseViewHolder holder = new BaseRecyclerViewAdapter.BaseViewHolder(this);
+    private BaseViewHolder holder = new BaseViewHolder(this);
 
     public BaseFooterView(Context context) {
         super(context);
@@ -36,7 +36,7 @@ public abstract class BaseFooterView extends RelativeLayout {
      *
      * @return ViewHolder
      */
-    public BaseRecyclerViewAdapter.BaseViewHolder getHolder() {
+    public BaseViewHolder getHolder() {
         return holder;
     }
 
