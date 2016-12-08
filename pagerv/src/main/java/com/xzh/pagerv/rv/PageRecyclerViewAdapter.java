@@ -68,7 +68,7 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
         } else if (isHeader(position)) { //Header的位置
             return VIEW_TYPE_HEADER;
         }
-        return getLayoutIndex(list().get(getDataPosition(position)));
+        return getLayoutIndex(OBJECTS.get(getDataPosition(position)));
     }
 
     /**
@@ -159,7 +159,7 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
     /**
      * 获取ViewHolder
      *
-     * @param root  Holder绑定的View对象
+     * @param root     Holder绑定的View对象
      * @param layoutID 布局的ID
      * @return ItemHolder
      */
@@ -208,11 +208,11 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
     /**
      * Footer的ViewType类型
      */
-    private final int VIEW_TYPE_FOOTER = -100;
+    private final int VIEW_TYPE_FOOTER = -1000;
     /**
      * Header的ViewType类型
      */
-    private final int VIEW_TYPE_HEADER = -200;
+    private final int VIEW_TYPE_HEADER = -1001;
 
     private PageViewHolder mFooterHolder;
     private PageViewHolder mHeaderHolder;

@@ -35,16 +35,18 @@ public class PageRecyclerView extends RecyclerView {
         setLayoutManager(layoutManager);
         setHasFixedSize(hasFixedSize);
         setAdapter(adapter);
+        //默认去除动画
+        setItemAnimator(null);
     }
 
     /**
      * 设置RV的某一类型的缓存View的数量，应该大于一屏可显示的最大数量，
      * 不然下拉刷新时会重新生成新的缓存View数组导致闪烁，无法复用控件
      *
-     * @param viewType 布局类型
-     * @param size     缓存控件个数
+     * @param layoutIndex 布局下标
+     * @param size        缓存控件个数
      */
-    public void setRecycledViewPoolSize(int viewType, int size) {
-        getRecycledViewPool().setMaxRecycledViews(viewType, size);
+    public void setRecycledViewPoolSize(int layoutIndex, int size) {
+        getRecycledViewPool().setMaxRecycledViews(layoutIndex, size);
     }
 }

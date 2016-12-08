@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.xzh.pagerv.demo.R;
-import com.xzh.pagerv.status.PageFooterStatusView;
+import com.xzh.pagerv.status.PageStatusView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
  * 分页加载尾部的控件
  * Created by xiezihao on 16/12/6.
  */
-public class FooterStatusView extends PageFooterStatusView {
+public class FooterStatusView extends PageStatusView {
 
     @BindView(R.id.v_progress)
     View v_progress;
@@ -26,10 +26,6 @@ public class FooterStatusView extends PageFooterStatusView {
 
     public FooterStatusView(Context context) {
         super(context);
-    }
-
-    public FooterStatusView(Context context, String progressMsg) {
-        super(context, progressMsg);
     }
 
     public FooterStatusView(Context context, AttributeSet attrs) {
@@ -51,12 +47,21 @@ public class FooterStatusView extends PageFooterStatusView {
     }
 
     @Override
-    protected void showStatus(boolean progress, boolean failed, boolean empty, String msg) {
+    public void setDefaultMsg(String progressMsg, String emptyMsg) {
+        //设置默认进度文本和空文本
+        tv_empty.setText(emptyMsg);
+    }
+
+    @Override
+    protected void setFailedMsg(String msg) {
+        tv_failed.setText(msg);
+    }
+
+    @Override
+    protected void showStatus(boolean progress, boolean failed, boolean empty) {
         v_progress.setVisibility(progress ? VISIBLE : GONE);
         tv_failed.setVisibility(failed ? VISIBLE : GONE);
-        tv_failed.setText(failed ? msg : null);
         tv_empty.setVisibility(empty ? VISIBLE : GONE);
-        tv_empty.setText(empty ? msg : null);
     }
 
     @Override

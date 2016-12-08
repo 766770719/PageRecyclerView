@@ -12,22 +12,8 @@ import android.widget.RelativeLayout;
  */
 public abstract class PageStatusView extends RelativeLayout {
 
-    private String progressMsg;
-
     public PageStatusView(Context context) {
         super(context);
-        init();
-    }
-
-    /**
-     * 构造函数
-     *
-     * @param context     上下文s
-     * @param progressMsg 进度状态时的信息
-     */
-    public PageStatusView(Context context, String progressMsg) {
-        super(context);
-        this.progressMsg = progressMsg;
         init();
     }
 
@@ -72,50 +58,48 @@ public abstract class PageStatusView extends RelativeLayout {
     protected abstract void initViews();
 
     /**
+     * 设置默认文本信息
+     *
+     * @param progressMsg 进度文本信息
+     * @param emptyMsg    空状态信息
+     */
+    public abstract void setDefaultMsg(String progressMsg, String emptyMsg);
+
+    /**
+     * 设置失败信息文本
+     *
+     * @param msg 文本
+     */
+    protected abstract void setFailedMsg(String msg);
+
+    /**
      * 显示进度
      */
     public void progress() {
-        showStatus(true, false, false, progressMsg);
+        showStatus(true, false, false);
     }
 
     /**
      * 失败
      */
     public void failed(String msg) {
-        showStatus(false, true, false, msg);
+        setFailedMsg(msg);
+        showStatus(false, true, false);
     }
+
+    /**
+     * 设置失败点击监听
+     *
+     * @param listener 失败点击监听
+     */
+    public abstract void setOnFailedClickListener(OnClickListener listener);
 
     /**
      * 空
      */
-    public void empty(String msg) {
-        showStatus(false, false, true, msg);
+    public void empty() {
+        showStatus(false, false, true);
     }
-
-    /**
-     * 成功，隐藏
-     */
-    public void success() {
-        setVisibility(GONE);
-    }
-
-    /**
-     * 重置UI
-     */
-    public void resetUI() {
-        progress();
-        setVisibility(VISIBLE);
-    }
-
-    /**
-     * 显示状态
-     *
-     * @param progress true 是当前状态
-     * @param failed   true 是当前状态
-     * @param empty    true 是当前状态
-     * @param msg 信息参数
-     */
-    protected abstract void showStatus(boolean progress, boolean failed, boolean empty, String msg);
 
     /**
      * 是否是空了
@@ -125,9 +109,26 @@ public abstract class PageStatusView extends RelativeLayout {
     public abstract boolean isEmptyShow();
 
     /**
-     * 设置失败点击监听
+     * 显示状态
      *
-     * @param listener 失败点击监听
+     * @param progress true 是当前状态
+     * @param failed   true 是当前状态
+     * @param empty    true 是当前状态
      */
-    public abstract void setOnFailedClickListener(OnClickListener listener);
+    protected abstract void showStatus(boolean progress, boolean failed, boolean empty);
+
+    /**
+     * 成功状态：隐藏控件
+     */
+    public void success() {
+        setVisibility(GONE);
+    }
+
+    /**
+     * 重置UI到默认样式
+     */
+    public void resetUI() {
+        progress();
+        setVisibility(VISIBLE);
+    }
 }

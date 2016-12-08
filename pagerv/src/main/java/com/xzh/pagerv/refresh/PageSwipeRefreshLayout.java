@@ -19,7 +19,7 @@ public class PageSwipeRefreshLayout extends SwipeRefreshLayout implements IPageR
     }
 
     @Override
-    public void init(final OnPageRefreshListener listener) {
+    public void setListener(final OnPageRefreshListener listener) {
         setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {

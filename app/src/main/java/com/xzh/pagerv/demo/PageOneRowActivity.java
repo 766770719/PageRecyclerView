@@ -35,7 +35,7 @@ public class PageOneRowActivity extends Activity {
     @BindView(R.id.csv)
     ContentStatusView csv;
 
-    private IndexPageHelper<User, ViewHolder> mHepler = new IndexPageHelper<>();
+    private IndexPageHelper<User, ViewHolder> mHelper = new IndexPageHelper<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +47,9 @@ public class PageOneRowActivity extends Activity {
         prv.init(new LinearLayoutManager(this), true, mAdapter);
 
         //初始化分页Helper
-        mHepler.init(mAdapter, csv, psrl, new FooterStatusView(this, "正在加载数据"), this::loadPage);
+        mHelper.init(mAdapter, csv, psrl, new FooterStatusView(this), this::loadPage);
         //开始加载，并设置默认的页标
-        mHepler.start(1);
+        mHelper.start(1, "数据加载中...", "正在获取下一页数据", "暂无数据信息", "没有更多数据了");
     }
 
     /**
@@ -61,12 +61,12 @@ public class PageOneRowActivity extends Activity {
         //测试数据
         prv.postDelayed(() -> {
             if (page > 3) { //超过3页没有数据了
-                mHepler.loadEmpty(page, "没有数据内容", "没有更多数据了");
+                mHelper.loadEmpty(page);
             } else { //有数据
                 List<User> users = new ArrayList<>();
                 for (int i = 0; i < 10; i++)
                     users.add(new User(page + "数据" + i + ":" + System.currentTimeMillis()));
-                mHepler.loadSuccess(page, users);
+                mHelper.loadSuccess(page, users);
             }
         }, 1500);
     }

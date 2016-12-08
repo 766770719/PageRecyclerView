@@ -18,7 +18,7 @@ public class SwipeRefreshLayout extends android.support.v4.widget.SwipeRefreshLa
     }
 
     @Override
-    public void init(OnPageRefreshListener listener) {
+    public void setListener(OnPageRefreshListener listener) {
         setOnRefreshListener(listener::onRefresh);
     }
 

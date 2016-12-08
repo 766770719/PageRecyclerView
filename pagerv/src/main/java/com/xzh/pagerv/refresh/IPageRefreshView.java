@@ -7,11 +7,11 @@ package com.xzh.pagerv.refresh;
 public interface IPageRefreshView {
 
     /**
-     * 初始化
+     * 设置监听
      *
      * @param listener 刷新监听
      */
-    void init(OnPageRefreshListener listener);
+    void setListener(OnPageRefreshListener listener);
 
     /**
      * 显示刷新控件

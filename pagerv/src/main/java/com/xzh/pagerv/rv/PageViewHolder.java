@@ -9,7 +9,7 @@ import android.view.View;
 public class PageViewHolder extends RecyclerView.ViewHolder {
 
     //可点击的View缓存
-    public View clickView;
+    View clickView;
 
     public PageViewHolder(View view) {
         super(view);
