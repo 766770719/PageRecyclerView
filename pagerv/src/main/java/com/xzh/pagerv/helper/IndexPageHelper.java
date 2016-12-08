@@ -7,7 +7,7 @@ import java.util.List;
  * Created by xiezihao on 16/12/7.
  */
 
-public class IndexPageHelper<T, H> extends BasePageHelper<Integer, T, H> {
+public class IndexPageHelper<T, H> extends PageHelper<Integer, T, H> {
 
     @Override
     protected boolean isFirstPage(Integer key, Integer defaultKey) {

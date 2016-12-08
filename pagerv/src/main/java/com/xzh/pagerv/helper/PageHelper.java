@@ -1,11 +1,11 @@
 package com.xzh.pagerv.helper;
 
-import com.xzh.pagerv.footer.BaseFooterView;
-import com.xzh.pagerv.rv.OnFooterShowListener;
 import com.xzh.pagerv.refresh.IPageRefreshView;
 import com.xzh.pagerv.refresh.OnPageRefreshListener;
-import com.xzh.pagerv.rv.BaseRecyclerViewAdapter;
-import com.xzh.pagerv.status.BaseContentStatusView;
+import com.xzh.pagerv.rv.OnFooterShowListener;
+import com.xzh.pagerv.rv.PageRecyclerViewAdapter;
+import com.xzh.pagerv.status.PageContentStatusView;
+import com.xzh.pagerv.status.PageFooterStatusView;
 
 import java.util.List;
 
@@ -13,13 +13,13 @@ import java.util.List;
  * 基础分页操作类
  * Created by xiezihao on 16/12/7.
  */
-public abstract class BasePageHelper<K, T, H> {
+public abstract class PageHelper<K, T, H> {
 
     //参数
-    private BaseRecyclerViewAdapter<T, H> adapter;
-    private BaseContentStatusView contentStatusView;
+    private PageRecyclerViewAdapter<T, H> adapter;
+    private PageContentStatusView contentStatusView;
     private IPageRefreshView pageRefreshView;
-    private BaseFooterView footerView;
+    private PageFooterStatusView footerStatusView;
     private OnPageListener<K> listener;
 
     //默认页的KEY,当前的Key
@@ -33,20 +33,20 @@ public abstract class BasePageHelper<K, T, H> {
      * @param adapter           适配器
      * @param contentStatusView 状态View
      * @param pageRefreshView   下拉刷新
-     * @param footerView        Footer
+     * @param footerStatusView        Footer
      * @param listener          监听
      */
-    public void init(BaseRecyclerViewAdapter<T, H> adapter, BaseContentStatusView contentStatusView, IPageRefreshView pageRefreshView,
-                     BaseFooterView footerView, OnPageListener<K> listener) {
+    public void init(PageRecyclerViewAdapter<T, H> adapter, PageContentStatusView contentStatusView, IPageRefreshView pageRefreshView,
+                     PageFooterStatusView footerStatusView, OnPageListener<K> listener) {
         this.adapter = adapter;
         this.contentStatusView = contentStatusView;
         this.pageRefreshView = pageRefreshView;
-        this.footerView = footerView;
+        this.footerStatusView = footerStatusView;
         this.listener = listener;
 
         //初始化控件显示状态
         contentStatusView.resetUI();
-        footerView.resetUI();
+        footerStatusView.resetUI();
 
         //初始化下拉控件监听
         pageRefreshView.init(new OnPageRefreshListener() {
@@ -94,10 +94,10 @@ public abstract class BasePageHelper<K, T, H> {
      */
     private void loadNextPage() {
         //判断Footer状态
-        if (footerView.isEmptyShow()) //没有更多数据了
+        if (footerStatusView.isEmptyShow()) //没有更多数据了
             return;
         //设置footer的显示
-        footerView.progress();
+        footerStatusView.progress();
         //加载下一页
         loadPage(getNextPageKey(currentKey, adapter.list()));
     }
@@ -128,7 +128,7 @@ public abstract class BasePageHelper<K, T, H> {
             contentStatusView.failed();
         } else { //其它页数据:第二页或以上
             //直接通知footer失败即可
-            footerView.failed();
+            footerStatusView.failed();
         }
         pageRefreshView.showRefreshView(false);
         isLoading = false;
@@ -139,13 +139,13 @@ public abstract class BasePageHelper<K, T, H> {
      *
      * @param key 页Key
      */
-    private void loadEmpty(K key) {
+    public void loadEmpty(K key) {
         if (isFirstPage(key, defaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
             adapter.resetUI(false);
             contentStatusView.resetUI();
             contentStatusView.empty();
         } else { //其它页数据:第二页或以上
-            footerView.empty();
+            footerStatusView.empty();
         }
     }
 
@@ -159,8 +159,8 @@ public abstract class BasePageHelper<K, T, H> {
         List<T> list = adapter.list();
         if (isFirstPage(key, defaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
             contentStatusView.success();
-            footerView.resetUI();
-            adapter.setFooter(footerView.getHolder());
+            footerStatusView.resetUI();
+            adapter.setFooter(footerStatusView.getHolder());
             list.clear();
             list.addAll(data);
             adapter.notifyDataSetChanged();

@@ -1,60 +1,56 @@
-package com.xzh.pagerv.footer;
+package com.xzh.pagerv.status;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.xzh.pagerv.rv.BaseViewHolder;
-
 /**
- * 基础FooterView
+ * 基础分页状态View
  * Created by xiezihao on 16/12/6.
  */
-public abstract class BaseFooterView extends RelativeLayout {
+public abstract class PageStatusView extends RelativeLayout {
 
-    //Holder对象
-    private BaseViewHolder holder = new BaseViewHolder(this);
-
-    public BaseFooterView(Context context) {
+    public PageStatusView(Context context) {
         super(context);
         init();
     }
 
-    public BaseFooterView(Context context, AttributeSet attrs) {
+    public PageStatusView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public BaseFooterView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public PageStatusView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
-    }
-
-    /**
-     * 获取ViewHolder
-     *
-     * @return ViewHolder
-     */
-    public BaseViewHolder getHolder() {
-        return holder;
     }
 
     /**
      * 初始化
      */
     private void init() {
-        addView(LayoutInflater.from(getContext()).inflate(getContentViewID(), this, false));
+        addView(getContentView());
         initViews();
-        progress();
     }
 
     /**
-     * 获取内容布局ID
+     * 获取布局View，可使用{@link #inflate(int)}加载LayoutID成View
      *
-     * @return 布局ID
+     * @return 布局View
      */
-    protected abstract int getContentViewID();
+    protected abstract View getContentView();
+
+    /**
+     * 加载布局
+     *
+     * @param layoutID 布局ID
+     * @return View
+     */
+    protected View inflate(int layoutID) {
+        return LayoutInflater.from(getContext()).inflate(layoutID, this, false);
+    }
 
     /**
      * 初始化控件

@@ -6,12 +6,12 @@ import android.view.View;
 /**
  * 基础ViewHolder
  */
-public class BaseViewHolder extends RecyclerView.ViewHolder {
+public class PageViewHolder extends RecyclerView.ViewHolder {
 
     //可点击的View缓存
     public View clickView;
 
-    public BaseViewHolder(View view) {
+    public PageViewHolder(View view) {
         super(view);
     }
 

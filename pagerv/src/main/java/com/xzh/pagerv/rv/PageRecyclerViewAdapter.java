@@ -15,7 +15,7 @@ import java.util.List;
  * @param <T> 数据类型
  * @param <H> ViewHolder类型
  */
-public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter<BaseViewHolder> {
+public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter<PageViewHolder> {
 
     private int[] layoutIDs;
     private int[] clickViewIDs;
@@ -25,7 +25,7 @@ public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
      *
      * @param layoutID 布局ID
      */
-    public BaseRecyclerViewAdapter(int layoutID) {
+    public PageRecyclerViewAdapter(int layoutID) {
         this(layoutID, 0);
     }
 
@@ -35,7 +35,7 @@ public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
      * @param layoutID    布局ID
      * @param clickViewID 点击ViewID，0整行，-1不设置
      */
-    public BaseRecyclerViewAdapter(int layoutID, int clickViewID) {
+    public PageRecyclerViewAdapter(int layoutID, int clickViewID) {
         this(new int[]{layoutID}, new int[]{clickViewID});
     }
 
@@ -45,7 +45,7 @@ public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
      * @param layoutIDs    布局IDs
      * @param clickViewIDs 点击ViewIDs，0整行，-1不设置，其它对应的View，和布局对应
      */
-    public BaseRecyclerViewAdapter(int[] layoutIDs, int[] clickViewIDs) {
+    public PageRecyclerViewAdapter(int[] layoutIDs, int[] clickViewIDs) {
         this.layoutIDs = layoutIDs;
         this.clickViewIDs = clickViewIDs;
     }
@@ -62,17 +62,27 @@ public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
      * @return 当前数据对应的布局下标，和传入的布局列表对应
      */
     @Override
-    public int getItemViewType(int position) {
+    public final int getItemViewType(int position) {
         if (isFooter(position)) { //Footer的位置
             return VIEW_TYPE_FOOTER;
         } else if (isHeader(position)) { //Header的位置
             return VIEW_TYPE_HEADER;
         }
+        return getLayoutIndex(list().get(getDataPosition(position)));
+    }
+
+    /**
+     * 获取布局的下标
+     *
+     * @param obj 数据类型
+     * @return 对应数据的布局下标
+     */
+    public int getLayoutIndex(T obj) {
         return 0;
     }
 
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public PageViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         if (viewType == VIEW_TYPE_FOOTER) { //是Footer
             return mFooterHolder;
         } else if (viewType == VIEW_TYPE_HEADER) { //是Header
@@ -80,12 +90,13 @@ public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
         }
 
         if (viewType < 0 || viewType >= layoutIDs.length) { //不合法viewType,不在布局数组长度内
-            throw new RuntimeException("getItemViewType的返回值不在传入的布局数组长度范围内");
+            throw new ArrayIndexOutOfBoundsException("getItemViewType的返回值不在传入的布局数组长度范围内");
         }
 
         //必须传入parent来inflate布局，不然item的match_parent无效
-        View root = LayoutInflater.from(viewGroup.getContext()).inflate(layoutIDs[viewType], viewGroup, false);
-        BaseViewHolder holder = getViewHolder(root, viewType);
+        int layoutID = layoutIDs[viewType];
+        View root = LayoutInflater.from(viewGroup.getContext()).inflate(layoutID, viewGroup, false);
+        PageViewHolder holder = getViewHolder(root, layoutID);
         int clickViewID = clickViewIDs[viewType];
         if (clickViewID == 0) { //整行点击
             holder.clickView = root;
@@ -99,18 +110,29 @@ public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
     }
 
     @Override
-    public void onBindViewHolder(BaseViewHolder holder, int position) {
+    public void onBindViewHolder(PageViewHolder holder, int position) {
         if (isFooter(position)) { //Footer不绑定数据
             onFooterShow();
             return;
         } else if (isHeader(position)) { //Header不绑定数据
             return;
         }
-        int dataPosition = position - (mHeaderHolder == null ? 0 : 1); //如果存在头部，数据位置应该减去1
+        int dataPosition = getDataPosition(position);
         if (holder.clickView != null) {
             holder.clickView.setTag(dataPosition);
         }
         bindView((H) holder, OBJECTS.get(dataPosition), dataPosition, getItemViewType(position));
+    }
+
+    /**
+     * 获取数据的位置
+     *
+     * @param position RV中Item的位置
+     * @return 数据的位置
+     */
+    private int getDataPosition(int position) {
+        //如果存在头部，数据位置应该减去1
+        return position - (mHeaderHolder == null ? 0 : 1);
     }
 
     //点击监听
@@ -138,10 +160,10 @@ public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
      * 获取ViewHolder
      *
      * @param root  Holder绑定的View对象
-     * @param index 布局的Index
+     * @param layoutID 布局的ID
      * @return ItemHolder
      */
-    protected abstract BaseViewHolder getViewHolder(View root, int index);
+    protected abstract PageViewHolder getViewHolder(View root, int layoutID);
 
     /**
      * 绑定数据
@@ -192,15 +214,15 @@ public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
      */
     private final int VIEW_TYPE_HEADER = -200;
 
-    private BaseViewHolder mFooterHolder;
-    private BaseViewHolder mHeaderHolder;
+    private PageViewHolder mFooterHolder;
+    private PageViewHolder mHeaderHolder;
 
     /**
      * 设置FooterView,需要{@link #notifyDataSetChanged()},目前只支持单Footer主要是用于显示分页
      *
      * @param footer footer
      */
-    public void setFooter(BaseViewHolder footer) {
+    public void setFooter(PageViewHolder footer) {
         mFooterHolder = footer;
     }
 
@@ -209,7 +231,7 @@ public abstract class BaseRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
      *
      * @param header header
      */
-    public void setHeader(BaseViewHolder header) {
+    public void setHeader(PageViewHolder header) {
         mHeaderHolder = header;
     }
 

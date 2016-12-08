@@ -4,39 +4,45 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.xzh.pagerv.footer.BaseFooterView;
 import com.xzh.pagerv.demo.R;
+import com.xzh.pagerv.status.PageContentStatusView;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
- * 分页加载尾部的控件
- * Created by xiezihao on 16/12/6.
+ * 内容状态View
+ * Created by xiezihao on 16/12/8.
  */
-public class FooterView extends BaseFooterView {
+public class ContentStatusView extends PageContentStatusView {
 
-    private View v_progress, v_failed, v_empty;
+    @BindView(R.id.v_progress)
+    View v_progress;
+    @BindView(R.id.v_failed)
+    View v_failed;
+    @BindView(R.id.v_empty)
+    View v_empty;
 
-    public FooterView(Context context) {
+    public ContentStatusView(Context context) {
         super(context);
     }
 
-    public FooterView(Context context, AttributeSet attrs) {
+    public ContentStatusView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public FooterView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ContentStatusView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @Override
-    protected int getContentViewID() {
-        return R.layout.view_footer;
+    protected View getContentView() {
+        return inflate(R.layout.view_content_status);
     }
 
     @Override
     protected void initViews() {
-        v_progress = findViewById(R.id.v_progress);
-        v_failed = findViewById(R.id.v_failed);
-        v_empty = findViewById(R.id.v_empty);
+        ButterKnife.bind(this);
     }
 
     @Override

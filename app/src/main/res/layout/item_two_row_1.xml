@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="42dp"
+    android:gravity="center_vertical"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp">
+
+    <Button
+        android:id="@+id/v_click_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="按钮(行1样式)" />
+
+    <TextView
+        android:id="@+id/tv_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:text="文本"
+        android:textColor="#999"
+        android:textSize="14sp" />
+
+</LinearLayout>
