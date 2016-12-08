@@ -150,6 +150,8 @@ public abstract class PageHelper<K, T, H> {
         } else { //其它页数据:第二页或以上
             footerStatusView.empty(footerMsg);
         }
+        pageRefreshView.showRefreshView(false);
+        isLoading = false;
     }
 
     /**

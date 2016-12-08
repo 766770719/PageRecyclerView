@@ -54,10 +54,9 @@ public class FooterStatusView extends PageFooterStatusView {
     protected void showStatus(boolean progress, boolean failed, boolean empty, String msg) {
         v_progress.setVisibility(progress ? VISIBLE : GONE);
         tv_failed.setVisibility(failed ? VISIBLE : GONE);
-        tv_failed.setVisibility(failed ? VISIBLE : GONE);
         tv_failed.setText(failed ? msg : null);
         tv_empty.setVisibility(empty ? VISIBLE : GONE);
-        tv_empty.setText(failed ? msg : null);
+        tv_empty.setText(empty ? msg : null);
     }
 
     @Override

@@ -59,16 +59,16 @@ public class PageOneRowActivity extends Activity {
      */
     private void loadPage(int page) {
         //测试数据
-        if (page > 3) { //超过3页没有数据了
-            mHepler.loadEmpty(page, "没有数据内容", "没有更多数据了");
-        } else { //有数据
-            prv.postDelayed(() -> {
+        prv.postDelayed(() -> {
+            if (page > 3) { //超过3页没有数据了
+                mHepler.loadEmpty(page, "没有数据内容", "没有更多数据了");
+            } else { //有数据
                 List<User> users = new ArrayList<>();
                 for (int i = 0; i < 10; i++)
                     users.add(new User(page + "数据" + i + ":" + System.currentTimeMillis()));
                 mHepler.loadSuccess(page, users);
-            }, 1500);
-        }
+            }
+        }, 1500);
     }
 
     //Adapter:第二个参数表示如何触发onItemClick,-1:不可点击不触发,0或不填整行触发，控件ID点击这个控件才会触发

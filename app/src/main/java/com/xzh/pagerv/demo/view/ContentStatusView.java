@@ -56,7 +56,7 @@ public class ContentStatusView extends PageContentStatusView {
         tv_failed.setVisibility(failed ? VISIBLE : GONE);
         tv_failed.setText(failed ? msg : null);
         tv_empty.setVisibility(empty ? VISIBLE : GONE);
-        tv_empty.setText(failed ? msg : null);
+        tv_empty.setText(empty ? msg : null);
     }
 
     @Override
