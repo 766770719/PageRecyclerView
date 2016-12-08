@@ -119,16 +119,17 @@ public abstract class PageHelper<K, T, H> {
      * 加载失败
      *
      * @param key 页Key
+     * @param msg 信息
      */
-    private void loadFailed(K key) {
+    private void loadFailed(K key, String msg) {
         if (isFirstPage(key, defaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
             //只通知状态控件失败，不改变其隐藏属性。
             // 1.第一次加载数据或第一次加载失败后下拉刷新控件本来就是是显示的，直接通知失败即可
             // 2.加载成功一页数据后，控件被隐藏掉，下拉刷新失败，任然通知失败，此时控件是隐藏的，界面不会发生改变，依然显示现有数据
-            contentStatusView.failed();
+            contentStatusView.failed(msg);
         } else { //其它页数据:第二页或以上
             //直接通知footer失败即可
-            footerStatusView.failed();
+            footerStatusView.failed(msg);
         }
         pageRefreshView.showRefreshView(false);
         isLoading = false;
@@ -138,14 +139,16 @@ public abstract class PageHelper<K, T, H> {
      * 加载空
      *
      * @param key 页Key
+     * @param contentMsg 内容空信息
+     * @param footerMsg footer空信息
      */
-    public void loadEmpty(K key) {
+    public void loadEmpty(K key, String contentMsg, String footerMsg) {
         if (isFirstPage(key, defaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
             adapter.resetUI(false);
             contentStatusView.resetUI();
-            contentStatusView.empty();
+            contentStatusView.empty(contentMsg);
         } else { //其它页数据:第二页或以上
-            footerStatusView.empty();
+            footerStatusView.empty(footerMsg);
         }
     }
 

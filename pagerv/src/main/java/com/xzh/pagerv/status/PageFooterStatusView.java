@@ -26,6 +26,10 @@ public abstract class PageFooterStatusView extends PageStatusView {
         super(context);
     }
 
+    public PageFooterStatusView(Context context, String progressMsg) {
+        super(context, progressMsg);
+    }
+
     public PageFooterStatusView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }

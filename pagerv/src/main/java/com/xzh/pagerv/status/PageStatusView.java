@@ -12,8 +12,22 @@ import android.widget.RelativeLayout;
  */
 public abstract class PageStatusView extends RelativeLayout {
 
+    private String progressMsg;
+
     public PageStatusView(Context context) {
         super(context);
+        init();
+    }
+
+    /**
+     * 构造函数
+     *
+     * @param context     上下文s
+     * @param progressMsg 进度状态时的信息
+     */
+    public PageStatusView(Context context, String progressMsg) {
+        super(context);
+        this.progressMsg = progressMsg;
         init();
     }
 
@@ -61,21 +75,21 @@ public abstract class PageStatusView extends RelativeLayout {
      * 显示进度
      */
     public void progress() {
-        showStatus(true, false, false);
+        showStatus(true, false, false, progressMsg);
     }
 
     /**
      * 失败
      */
-    public void failed() {
-        showStatus(false, true, false);
+    public void failed(String msg) {
+        showStatus(false, true, false, msg);
     }
 
     /**
      * 空
      */
-    public void empty() {
-        showStatus(false, false, true);
+    public void empty(String msg) {
+        showStatus(false, false, true, msg);
     }
 
     /**
@@ -99,8 +113,9 @@ public abstract class PageStatusView extends RelativeLayout {
      * @param progress true 是当前状态
      * @param failed   true 是当前状态
      * @param empty    true 是当前状态
+     * @param msg 信息参数
      */
-    protected abstract void showStatus(boolean progress, boolean failed, boolean empty);
+    protected abstract void showStatus(boolean progress, boolean failed, boolean empty, String msg);
 
     /**
      * 是否是空了

@@ -25,7 +25,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/v_failed"
+        android:id="@+id/tv_failed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
@@ -33,7 +33,7 @@
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/v_empty"
+        android:id="@+id/tv_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"

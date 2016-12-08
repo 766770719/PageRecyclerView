@@ -3,6 +3,7 @@ package com.xzh.pagerv.demo.view;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.TextView;
 
 import com.xzh.pagerv.demo.R;
 import com.xzh.pagerv.status.PageFooterStatusView;
@@ -18,13 +19,17 @@ public class FooterStatusView extends PageFooterStatusView {
 
     @BindView(R.id.v_progress)
     View v_progress;
-    @BindView(R.id.v_failed)
-    View v_failed;
-    @BindView(R.id.v_empty)
-    View v_empty;
+    @BindView(R.id.tv_failed)
+    TextView tv_failed;
+    @BindView(R.id.tv_empty)
+    TextView tv_empty;
 
     public FooterStatusView(Context context) {
         super(context);
+    }
+
+    public FooterStatusView(Context context, String progressMsg) {
+        super(context, progressMsg);
     }
 
     public FooterStatusView(Context context, AttributeSet attrs) {
@@ -46,19 +51,22 @@ public class FooterStatusView extends PageFooterStatusView {
     }
 
     @Override
-    protected void showStatus(boolean progress, boolean failed, boolean empty) {
+    protected void showStatus(boolean progress, boolean failed, boolean empty, String msg) {
         v_progress.setVisibility(progress ? VISIBLE : GONE);
-        v_failed.setVisibility(failed ? VISIBLE : GONE);
-        v_empty.setVisibility(empty ? VISIBLE : GONE);
+        tv_failed.setVisibility(failed ? VISIBLE : GONE);
+        tv_failed.setVisibility(failed ? VISIBLE : GONE);
+        tv_failed.setText(failed ? msg : null);
+        tv_empty.setVisibility(empty ? VISIBLE : GONE);
+        tv_empty.setText(failed ? msg : null);
     }
 
     @Override
     public boolean isEmptyShow() {
-        return v_empty.getVisibility() == VISIBLE;
+        return tv_empty.getVisibility() == VISIBLE;
     }
 
     @Override
     public void setOnFailedClickListener(OnClickListener listener) {
-        v_failed.setOnClickListener(listener);
+        tv_failed.setOnClickListener(listener);
     }
 }

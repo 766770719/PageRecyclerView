@@ -47,7 +47,7 @@ public class PageOneRowActivity extends Activity {
         prv.init(new LinearLayoutManager(this), true, mAdapter);
 
         //初始化分页Helper
-        mHepler.init(mAdapter, csv, psrl, new FooterStatusView(this), this::loadPage);
+        mHepler.init(mAdapter, csv, psrl, new FooterStatusView(this, "正在加载数据"), this::loadPage);
         //开始加载，并设置默认的页标
         mHepler.start(1);
     }
@@ -60,7 +60,7 @@ public class PageOneRowActivity extends Activity {
     private void loadPage(int page) {
         //测试数据
         if (page > 3) { //超过3页没有数据了
-            mHepler.loadEmpty(page);
+            mHepler.loadEmpty(page, "没有数据内容", "没有更多数据了");
         } else { //有数据
             prv.postDelayed(() -> {
                 List<User> users = new ArrayList<>();

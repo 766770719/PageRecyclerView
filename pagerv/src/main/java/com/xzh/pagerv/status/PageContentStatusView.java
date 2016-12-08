@@ -2,7 +2,6 @@ package com.xzh.pagerv.status;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 
 /**
  * 内容状态View
@@ -12,6 +11,10 @@ public abstract class PageContentStatusView extends PageStatusView{
 
     public PageContentStatusView(Context context) {
         super(context);
+    }
+
+    public PageContentStatusView(Context context, String progressMsg) {
+        super(context, progressMsg);
     }
 
     public PageContentStatusView(Context context, AttributeSet attrs) {
