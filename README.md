@@ -7,7 +7,7 @@
 进入[jitpack.io](https://jitpack.io)官网并输入当前页面网址并Look up!
 
 ####使用说明：
-使用这个分页工具的Activity大致如下,即可实现自动控制各种状态UI显示,分页页脚效果,下拉刷新控制(使用了lambda和butterknife):
+使用这个分页工具的Activity大致如下,即可实现自动控制各种状态UI显示,分页页脚效果,下拉刷新控制(Demo中使用了lambda和butterknife):
 ```java
 public class PageOneRowActivity extends Activity {
 
