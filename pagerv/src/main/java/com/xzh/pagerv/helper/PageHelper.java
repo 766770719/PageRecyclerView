@@ -47,7 +47,8 @@ public abstract class PageHelper<K, T, H> {
         this.listener = listener;
 
         //创建FooterHolder
-        mFooterHolder = new PageViewHolder(footerStatusView);
+        if (footerStatusView != null)
+            mFooterHolder = new PageViewHolder(footerStatusView);
 
         //初始化下拉控件监听
         if (pageRefreshView != null) {
@@ -81,9 +82,11 @@ public abstract class PageHelper<K, T, H> {
         this.mDefaultKey = defaultKey;
         //初始化状态View
         contentStatusView.setDefaultMsg(contentProgress, contentEmpty);
-        footerStatusView.setDefaultMsg(footerProgress, footerEmpty);
         contentStatusView.resetUI();
-        footerStatusView.resetUI();
+        if (footerStatusView != null) {
+            footerStatusView.setDefaultMsg(footerProgress, footerEmpty);
+            footerStatusView.resetUI();
+        }
         //第一次加载类似下拉刷新，只不过不显示下拉刷新的效果
         refresh(false);
     }
@@ -108,11 +111,13 @@ public abstract class PageHelper<K, T, H> {
      * 加载下一页数据
      */
     private void loadNextPage() {
-        //判断Footer状态
-        if (footerStatusView.isEmptyShow()) //没有更多数据了
-            return;
-        //设置footer的显示
-        footerStatusView.progress();
+        if (footerStatusView != null) {
+            //判断Footer状态
+            if (footerStatusView.isEmptyShow()) //没有更多数据了
+                return;
+            //设置footer的显示
+            footerStatusView.progress();
+        }
         //加载下一页
         loadPage(getNextPageKey(mCurrentKey, adapter.list()));
     }
@@ -145,7 +150,8 @@ public abstract class PageHelper<K, T, H> {
             contentStatusView.failed(contentFailed);
         } else { //其它页数据:第二页或以上
             //直接通知footer失败即可
-            footerStatusView.failed(footerFailed);
+            if (footerStatusView != null)
+                footerStatusView.failed(footerFailed);
         }
         if (pageRefreshView != null)
             pageRefreshView.showRefreshView(false);
@@ -163,7 +169,8 @@ public abstract class PageHelper<K, T, H> {
             contentStatusView.resetUI();
             contentStatusView.empty();
         } else { //其它页数据:第二页或以上
-            footerStatusView.empty();
+            if (footerStatusView != null)
+                footerStatusView.empty();
         }
         if (pageRefreshView != null)
             pageRefreshView.showRefreshView(false);
@@ -180,7 +187,8 @@ public abstract class PageHelper<K, T, H> {
         List<T> list = adapter.list();
         if (isFirstPage(key, mDefaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
             contentStatusView.success();
-            footerStatusView.resetUI();
+            if (footerStatusView != null)
+                footerStatusView.resetUI();
             adapter.setFooter(mFooterHolder);
             list.clear();
             list.addAll(data);
