@@ -50,12 +50,14 @@ public abstract class PageHelper<K, T, H> {
         mFooterHolder = new PageViewHolder(footerStatusView);
 
         //初始化下拉控件监听
-        pageRefreshView.setListener(new OnPageRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refresh(true);
-            }
-        });
+        if (pageRefreshView != null) {
+            pageRefreshView.setListener(new OnPageRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    refresh(true);
+                }
+            });
+        }
         //初始化下一页加载监听
         adapter.setOnFooterShowListener(new OnFooterShowListener() {
             @Override
@@ -92,8 +94,10 @@ public abstract class PageHelper<K, T, H> {
      * @param showRefreshView 是否显示下拉刷新控件
      */
     public void refresh(boolean showRefreshView) {
-        if (showRefreshView) //需要显示效果，显示效果，不需要显示效果保持当前下拉刷新的显示效果
-            pageRefreshView.showRefreshView(true);
+        if (showRefreshView) { //需要显示效果，显示效果，不需要显示效果保持当前下拉刷新的显示效果
+            if (pageRefreshView != null)
+                pageRefreshView.showRefreshView(true);
+        }
         //恢复状态控件进度状态，但不改变其显示属性：1.第一次加载失败，下拉刷新，此时会显示进度控件 2.加载成功过数据，下拉刷新，此时不会显示进度控件
         contentStatusView.progress();
         //加载第一页数据
@@ -143,7 +147,8 @@ public abstract class PageHelper<K, T, H> {
             //直接通知footer失败即可
             footerStatusView.failed(footerFailed);
         }
-        pageRefreshView.showRefreshView(false);
+        if (pageRefreshView != null)
+            pageRefreshView.showRefreshView(false);
         isLoading = false;
     }
 
@@ -160,7 +165,8 @@ public abstract class PageHelper<K, T, H> {
         } else { //其它页数据:第二页或以上
             footerStatusView.empty();
         }
-        pageRefreshView.showRefreshView(false);
+        if (pageRefreshView != null)
+            pageRefreshView.showRefreshView(false);
         isLoading = false;
     }
 
@@ -188,7 +194,8 @@ public abstract class PageHelper<K, T, H> {
         }
         //缓存Key
         mCurrentKey = key;
-        pageRefreshView.showRefreshView(false);
+        if (pageRefreshView != null)
+            pageRefreshView.showRefreshView(false);
         isLoading = false;
     }
 
