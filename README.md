@@ -1,13 +1,14 @@
 # PageRecyclerView
 ####用于分页操作的RecyclerView封装
 
-####Gradle:
+####Gradle集成:
 进入[jitpack.io](https://jitpack.io)官网并输入当前页面网址并Look up!
 
 <video id="video" controls="" preload="none">
    <source id="mp4" src="demo.mp4" type="video/mp4">
 </video>
 
+####使用说明：
 使用这个分页工具的Activity大致如下,即可实现自动控制各种状态UI显示,分页页脚效果,下拉刷新控制(使用了lambda和butterknife):
 ```java
 public class PageOneRowActivity extends Activity {
