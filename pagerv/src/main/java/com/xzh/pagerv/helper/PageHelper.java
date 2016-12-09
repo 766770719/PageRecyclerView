@@ -142,7 +142,7 @@ public abstract class PageHelper<K, T, H> {
      * @param contentFailed 内容失败信息
      * @param footerFailed  footer失败信息
      */
-    private void loadFailed(K key, String contentFailed, String footerFailed) {
+    public void loadFailed(K key, String contentFailed, String footerFailed) {
         if (isFirstPage(key, mDefaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
             //只通知状态控件失败，不改变其隐藏属性。
             // 1.第一次加载数据或第一次加载失败后下拉刷新控件本来就是是显示的，直接通知失败即可

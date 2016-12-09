@@ -62,6 +62,8 @@ public class PageOneRowActivity extends Activity {
         prv.postDelayed(() -> {
             if (page > 3) { //超过3页没有数据了
                 mHelper.loadEmpty(page);
+                //如果失败情况可以使用
+                //mHelper.loadFailed(page,"网络错误！","网络错误，点击重新加载下一页");
             } else { //有数据
                 List<User> users = new ArrayList<>();
                 for (int i = 0; i < 10; i++)
