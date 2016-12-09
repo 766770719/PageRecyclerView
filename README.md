@@ -1,6 +1,9 @@
 # PageRecyclerView
 ####用于分页操作的RecyclerView封装
 
+####Gradle:
+进入[jitpack.io](https://jitpack.io)官网并输入当前页面网址并Look up!
+
 <video id="video" controls="" preload="none">
    <source id="mp4" src="demo.mp4" type="video/mp4">
 </video>
