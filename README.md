@@ -127,9 +127,9 @@ public class SwipeRefreshLayout extends android.support.v4.widget.SwipeRefreshLa
     }
 }
 ```
-上述页面的ContentStatusView可以自己扩展，类似写法如下：
+上述页面的ContentStatusView和FooterStatusView(Demo中这两个View除了布局不一样，其它都一样，所以扩展都一样)可以自己扩展，类似写法如下：
 ```java
-public class ContentStatusView extends PageStatusView {
+public class ContentStatusView/**FooterStatusView*/ extends PageStatusView {
 
     @BindView(R.id.v_progress)
     View v_progress;
@@ -153,68 +153,6 @@ public class ContentStatusView extends PageStatusView {
     @Override
     protected View getContentView() {
         return inflate(R.layout.view_content_status);
-    }
-
-    @Override
-    protected void initViews() {
-        ButterKnife.bind(this);
-    }
-
-    @Override
-    public void setDefaultMsg(String progressMsg, String emptyMsg) {
-        //设置默认进度文本和空文本
-        tv_empty.setText(emptyMsg);
-    }
-
-    @Override
-    protected void setFailedMsg(String msg) {
-        tv_failed.setText(msg);
-    }
-
-    @Override
-    protected void showStatus(boolean progress, boolean failed, boolean empty) {
-        v_progress.setVisibility(progress ? VISIBLE : GONE);
-        tv_failed.setVisibility(failed ? VISIBLE : GONE);
-        tv_empty.setVisibility(empty ? VISIBLE : GONE);
-    }
-
-    @Override
-    public boolean isEmptyShow() {
-        return tv_empty.getVisibility() == VISIBLE;
-    }
-
-    @Override
-    public void setOnFailedClickListener(OnClickListener listener) {
-        tv_failed.setOnClickListener(listener);
-    }
-}
-```
-上述页面分页页脚可以自己封装，具体封装如下,和ContentStatusView封装差不多类似：
-```java
-public class FooterStatusView extends PageStatusView {
-
-    @BindView(R.id.v_progress)
-    View v_progress;
-    @BindView(R.id.tv_failed)
-    TextView tv_failed;
-    @BindView(R.id.tv_empty)
-    TextView tv_empty;
-
-    public FooterStatusView(Context context) {
-        super(context);
-    }
-
-    public FooterStatusView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public FooterStatusView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    protected View getContentView() {
-        return inflate(R.layout.view_footer_status);
     }
 
     @Override
