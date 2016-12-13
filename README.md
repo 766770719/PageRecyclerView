@@ -3,7 +3,7 @@
 
 ![image](https://github.com/766770719/PageRecyclerView/blob/master/demo.gif)
 
-####Gradle集成:
+####Gradle集成[![](https://jitpack.io/v/766770719/PageRecyclerView.svg)](https://jitpack.io/#766770719/PageRecyclerView):
 进入[jitpack.io](https://jitpack.io)官网并输入当前页面网址并Look up!
 
 ####使用说明：
