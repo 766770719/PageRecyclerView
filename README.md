@@ -3,8 +3,8 @@
 
 ![image](https://github.com/766770719/PageRecyclerView/blob/master/demo.gif)
 
-####Gradle集成[![](https://jitpack.io/v/766770719/PageRecyclerView.svg)](https://jitpack.io/#766770719/PageRecyclerView):
-进入[jitpack.io](https://jitpack.io)官网并输入当前页面网址并Look up!
+####Gradle集成:
+[![](https://jitpack.io/v/766770719/PageRecyclerView.svg)](https://jitpack.io/#766770719/PageRecyclerView)
 
 ####使用说明：
 使用这个分页工具的Activity大致如下,即可实现自动控制各种状态UI显示,分页页脚效果,下拉刷新控制(Demo中使用了lambda和butterknife):
