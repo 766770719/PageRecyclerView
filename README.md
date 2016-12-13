@@ -1,7 +1,7 @@
 # PageRecyclerView
 ####用于分页操作的RecyclerView封装
 
-![image](https://github.com/766770719/PageRecyclerView/blob/master/demo.gif)
+![image](https://github.com/766770719/Resources/blob/master/PageRecyclerView/demo.gif)
 
 ####Gradle集成:
 [![](https://jitpack.io/v/766770719/PageRecyclerView.svg)](https://jitpack.io/#766770719/PageRecyclerView)
