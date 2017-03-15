@@ -265,7 +265,7 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
     /**
      * 尾部显示
      */
-    private void onFooterShow() {
+    protected void onFooterShow() {
         if (onFooterShowListener != null)
             onFooterShowListener.onFooterShow();
     }

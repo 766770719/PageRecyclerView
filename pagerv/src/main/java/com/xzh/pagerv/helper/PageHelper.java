@@ -1,5 +1,7 @@
 package com.xzh.pagerv.helper;
 
+import android.view.View;
+
 import com.xzh.pagerv.refresh.IPageRefreshView;
 import com.xzh.pagerv.refresh.OnPageRefreshListener;
 import com.xzh.pagerv.rv.OnFooterShowListener;
@@ -46,16 +48,31 @@ public abstract class PageHelper<K, T, H> {
         this.footerStatusView = footerStatusView;
         this.listener = listener;
 
-        //创建FooterHolder
-        if (footerStatusView != null)
-            mFooterHolder = new PageViewHolder(footerStatusView);
-
         //初始化下拉控件监听
         if (pageRefreshView != null) {
             pageRefreshView.setListener(new OnPageRefreshListener() {
                 @Override
                 public void onRefresh() {
                     refresh(true);
+                }
+            });
+        }
+        //初始化ContentStatusView
+        if (contentStatusView != null) {
+            contentStatusView.setOnFailedClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    refresh(false);
+                }
+            });
+        }
+        //创建FooterHolder
+        if (footerStatusView != null) {
+            mFooterHolder = new PageViewHolder(footerStatusView);
+            footerStatusView.setOnFailedClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadNextPage();
                 }
             });
         }
@@ -81,8 +98,11 @@ public abstract class PageHelper<K, T, H> {
         //缓存默认的Key
         this.mDefaultKey = defaultKey;
         //初始化状态View
-        contentStatusView.setDefaultMsg(contentProgress, contentEmpty);
-        contentStatusView.resetUI();
+        if (contentStatusView != null) {
+            contentStatusView.setDefaultMsg(contentProgress, contentEmpty);
+            contentStatusView.resetUI();
+        }
+        //初始化FooterView
         if (footerStatusView != null) {
             footerStatusView.setDefaultMsg(footerProgress, footerEmpty);
             footerStatusView.resetUI();
@@ -102,7 +122,8 @@ public abstract class PageHelper<K, T, H> {
                 pageRefreshView.showRefreshView(true);
         }
         //恢复状态控件进度状态，但不改变其显示属性：1.第一次加载失败，下拉刷新，此时会显示进度控件 2.加载成功过数据，下拉刷新，此时不会显示进度控件
-        contentStatusView.progress();
+        if (contentStatusView != null)
+            contentStatusView.progress();
         //加载第一页数据
         loadPage(mDefaultKey);
     }
@@ -147,7 +168,8 @@ public abstract class PageHelper<K, T, H> {
             //只通知状态控件失败，不改变其隐藏属性。
             // 1.第一次加载数据或第一次加载失败后下拉刷新控件本来就是是显示的，直接通知失败即可
             // 2.加载成功一页数据后，控件被隐藏掉，下拉刷新失败，任然通知失败，此时控件是隐藏的，界面不会发生改变，依然显示现有数据
-            contentStatusView.failed(contentFailed);
+            if (contentStatusView != null)
+                contentStatusView.failed(contentFailed);
         } else { //其它页数据:第二页或以上
             //直接通知footer失败即可
             if (footerStatusView != null)
@@ -166,8 +188,10 @@ public abstract class PageHelper<K, T, H> {
     public void loadEmpty(K key) {
         if (isFirstPage(key, mDefaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
             adapter.resetUI(false);
-            contentStatusView.resetUI();
-            contentStatusView.empty();
+            if (contentStatusView != null) {
+                contentStatusView.resetUI();
+                contentStatusView.empty();
+            }
         } else { //其它页数据:第二页或以上
             if (footerStatusView != null)
                 footerStatusView.empty();
@@ -186,7 +210,8 @@ public abstract class PageHelper<K, T, H> {
     public void loadSuccess(K key, List<T> data) {
         List<T> list = adapter.list();
         if (isFirstPage(key, mDefaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
-            contentStatusView.success();
+            if (contentStatusView != null)
+                contentStatusView.success();
             if (footerStatusView != null)
                 footerStatusView.resetUI();
             adapter.setFooter(mFooterHolder);
