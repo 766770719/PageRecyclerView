@@ -8,13 +8,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xzh.pagerv.demo.module.User;
-import com.xzh.pagerv.demo.view.ContentStatusView;
-import com.xzh.pagerv.demo.view.FooterStatusView;
 import com.xzh.pagerv.helper.IndexPageHelper;
 import com.xzh.pagerv.refresh.PageSwipeRefreshLayout;
 import com.xzh.pagerv.rv.PageRecyclerView;
 import com.xzh.pagerv.rv.PageRecyclerViewAdapter;
 import com.xzh.pagerv.rv.PageViewHolder;
+import com.xzh.pagerv.status.DefaultContentStatusView;
+import com.xzh.pagerv.status.DefaultFooterStatusView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class PageOneRowActivity extends Activity {
     @BindView(R.id.prv)
     PageRecyclerView prv;
     @BindView(R.id.csv)
-    ContentStatusView csv;
+    DefaultContentStatusView csv;
 
     private IndexPageHelper<User, ViewHolder> mHelper = new IndexPageHelper<>();
 
@@ -47,9 +47,9 @@ public class PageOneRowActivity extends Activity {
         prv.init(new LinearLayoutManager(this), true, mAdapter);
 
         //初始化分页Helper:1.可以不要下拉控件，设置为null即可  2.可以不要footer，即为单页数据效果，footer设置为null即可
-        mHelper.init(mAdapter, csv, psrl, new FooterStatusView(this), this::loadPage);
+        mHelper.init(mAdapter, csv, psrl, new DefaultFooterStatusView(this), this::loadPage);
         //开始加载，并设置默认的页标
-        mHelper.start(1, "数据加载中...", "正在获取下一页数据", "暂无数据信息", "没有更多数据了");
+        mHelper.start(1, "数据加载中...", "正在获取下一页数据");
     }
 
     /**
@@ -61,7 +61,7 @@ public class PageOneRowActivity extends Activity {
         //测试数据
         prv.postDelayed(() -> {
             if (page > 3) { //超过3页没有数据了
-                mHelper.loadEmpty(page);
+                mHelper.loadEmpty(page, "暂无数据信息", "没有更多数据了");
                 //如果失败情况可以使用
                 //mHelper.loadFailed(page,"网络错误！","网络错误，点击重新加载下一页");
             } else { //有数据

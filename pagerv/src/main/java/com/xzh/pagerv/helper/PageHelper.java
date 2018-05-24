@@ -7,7 +7,7 @@ import com.xzh.pagerv.refresh.OnPageRefreshListener;
 import com.xzh.pagerv.rv.OnFooterShowListener;
 import com.xzh.pagerv.rv.PageRecyclerViewAdapter;
 import com.xzh.pagerv.rv.PageViewHolder;
-import com.xzh.pagerv.status.PageStatusView;
+import com.xzh.pagerv.status.BaseStatusView;
 
 import java.util.List;
 
@@ -19,9 +19,9 @@ public abstract class PageHelper<K, T, H> {
 
     //参数
     private PageRecyclerViewAdapter<T, H> adapter;
-    private PageStatusView contentStatusView;
+    private BaseStatusView contentStatusView;
     private IPageRefreshView pageRefreshView;
-    private PageStatusView footerStatusView;
+    private BaseStatusView footerStatusView;
     private OnPageListener<K> listener;
 
     //FooterView创建的Holder
@@ -40,8 +40,8 @@ public abstract class PageHelper<K, T, H> {
      * @param footerStatusView  Footer
      * @param listener          监听
      */
-    public void init(PageRecyclerViewAdapter<T, H> adapter, PageStatusView contentStatusView, IPageRefreshView pageRefreshView,
-                     PageStatusView footerStatusView, OnPageListener<K> listener) {
+    public void init(PageRecyclerViewAdapter<T, H> adapter, BaseStatusView contentStatusView, IPageRefreshView pageRefreshView,
+                     BaseStatusView footerStatusView, OnPageListener<K> listener) {
         this.adapter = adapter;
         this.contentStatusView = contentStatusView;
         this.pageRefreshView = pageRefreshView;
@@ -50,31 +50,15 @@ public abstract class PageHelper<K, T, H> {
 
         //初始化下拉控件监听
         if (pageRefreshView != null) {
-            pageRefreshView.setListener(new OnPageRefreshListener() {
+            pageRefreshView.setPageRefreshListener(new OnPageRefreshListener() {
                 @Override
                 public void onRefresh() {
                     refresh(true);
                 }
             });
         }
-        //初始化ContentStatusView
-        if (contentStatusView != null) {
-            contentStatusView.setOnFailedClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    refresh(false);
-                }
-            });
-        }
-        //创建FooterHolder
         if (footerStatusView != null) {
             mFooterHolder = new PageViewHolder(footerStatusView);
-            footerStatusView.setOnFailedClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    loadNextPage();
-                }
-            });
         }
         //初始化下一页加载监听
         adapter.setOnFooterShowListener(new OnFooterShowListener() {
@@ -91,21 +75,17 @@ public abstract class PageHelper<K, T, H> {
      * @param defaultKey      默认页的Key
      * @param contentProgress 内容进度信息
      * @param footerProgress  尾部进度信息
-     * @param contentEmpty    内容空信息
-     * @param footerEmpty     没有更多数据空信息
      */
-    public void start(K defaultKey, String contentProgress, String footerProgress, String contentEmpty, String footerEmpty) {
+    public void start(K defaultKey, String contentProgress, String footerProgress) {
         //缓存默认的Key
         this.mDefaultKey = defaultKey;
         //初始化状态View
         if (contentStatusView != null) {
-            contentStatusView.setDefaultMsg(contentProgress, contentEmpty);
-            contentStatusView.resetUI();
+            contentStatusView.progress(contentProgress);
         }
         //初始化FooterView
         if (footerStatusView != null) {
-            footerStatusView.setDefaultMsg(footerProgress, footerEmpty);
-            footerStatusView.resetUI();
+            footerStatusView.progress(footerProgress);
         }
         //第一次加载类似下拉刷新，只不过不显示下拉刷新的效果
         refresh(false);
@@ -117,13 +97,9 @@ public abstract class PageHelper<K, T, H> {
      * @param showRefreshView 是否显示下拉刷新控件
      */
     public void refresh(boolean showRefreshView) {
-        if (showRefreshView) { //需要显示效果，显示效果，不需要显示效果保持当前下拉刷新的显示效果
-            if (pageRefreshView != null)
-                pageRefreshView.showRefreshView(true);
+        if (showRefreshView && pageRefreshView != null) { //需要显示效果，显示效果，不需要显示效果保持当前下拉刷新的显示效果
+            pageRefreshView.showPageRefreshView(true);
         }
-        //恢复状态控件进度状态，但不改变其显示属性：1.第一次加载失败，下拉刷新，此时会显示进度控件 2.加载成功过数据，下拉刷新，此时不会显示进度控件
-        if (contentStatusView != null)
-            contentStatusView.progress();
         //加载第一页数据
         loadPage(mDefaultKey);
     }
@@ -134,8 +110,9 @@ public abstract class PageHelper<K, T, H> {
     private void loadNextPage() {
         if (footerStatusView != null) {
             //判断Footer状态
-            if (footerStatusView.isEmptyShow()) //没有更多数据了
+            if (footerStatusView.isEmptyShow()) { //没有更多数据了
                 return;
+            }
             //设置footer的显示
             footerStatusView.progress();
         }
@@ -168,15 +145,28 @@ public abstract class PageHelper<K, T, H> {
             //只通知状态控件失败，不改变其隐藏属性。
             // 1.第一次加载数据或第一次加载失败后下拉刷新控件本来就是是显示的，直接通知失败即可
             // 2.加载成功一页数据后，控件被隐藏掉，下拉刷新失败，任然通知失败，此时控件是隐藏的，界面不会发生改变，依然显示现有数据
-            if (contentStatusView != null)
-                contentStatusView.failed(contentFailed);
+            if (contentStatusView != null) {
+                contentStatusView.failed(contentFailed, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        refresh(false);
+                    }
+                });
+            }
         } else { //其它页数据:第二页或以上
             //直接通知footer失败即可
-            if (footerStatusView != null)
-                footerStatusView.failed(footerFailed);
+            if (footerStatusView != null) {
+                footerStatusView.failed(footerFailed, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        loadNextPage();
+                    }
+                });
+            }
         }
-        if (pageRefreshView != null)
-            pageRefreshView.showRefreshView(false);
+        if (pageRefreshView != null) {
+            pageRefreshView.showPageRefreshView(false);
+        }
         isLoading = false;
     }
 
@@ -185,19 +175,20 @@ public abstract class PageHelper<K, T, H> {
      *
      * @param key 页Key
      */
-    public void loadEmpty(K key) {
+    public void loadEmpty(K key, String contentEmpty, String footerEmpty) {
         if (isFirstPage(key, mDefaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
-            adapter.resetUI(false);
+            adapter.clearAll(false, true);
             if (contentStatusView != null) {
-                contentStatusView.resetUI();
-                contentStatusView.empty();
+                contentStatusView.show().empty(contentEmpty);
             }
         } else { //其它页数据:第二页或以上
-            if (footerStatusView != null)
-                footerStatusView.empty();
+            if (footerStatusView != null) {
+                footerStatusView.empty(footerEmpty);
+            }
         }
-        if (pageRefreshView != null)
-            pageRefreshView.showRefreshView(false);
+        if (pageRefreshView != null) {
+            pageRefreshView.showPageRefreshView(false);
+        }
         isLoading = false;
     }
 
@@ -210,10 +201,12 @@ public abstract class PageHelper<K, T, H> {
     public void loadSuccess(K key, List<T> data) {
         List<T> list = adapter.list();
         if (isFirstPage(key, mDefaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
-            if (contentStatusView != null)
-                contentStatusView.success();
-            if (footerStatusView != null)
-                footerStatusView.resetUI();
+            if (contentStatusView != null) {
+                contentStatusView.hidden();
+            }
+            if (footerStatusView != null) {
+                footerStatusView.progress("sdfasdf");
+            }
             adapter.setFooter(mFooterHolder);
             list.clear();
             list.addAll(data);
@@ -227,8 +220,9 @@ public abstract class PageHelper<K, T, H> {
         }
         //缓存Key
         mCurrentKey = key;
-        if (pageRefreshView != null)
-            pageRefreshView.showRefreshView(false);
+        if (pageRefreshView != null) {
+            pageRefreshView.showPageRefreshView(false);
+        }
         isLoading = false;
     }
 

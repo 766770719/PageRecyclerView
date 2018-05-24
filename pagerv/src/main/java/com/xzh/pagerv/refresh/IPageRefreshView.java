@@ -11,12 +11,12 @@ public interface IPageRefreshView {
      *
      * @param listener 刷新监听
      */
-    void setListener(OnPageRefreshListener listener);
+    void setPageRefreshListener(OnPageRefreshListener listener);
 
     /**
      * 显示刷新控件
      *
      * @param show true 显示 false 隐藏
      */
-    void showRefreshView(boolean show);
+    void showPageRefreshView(boolean show);
 }

@@ -189,20 +189,6 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
         return OBJECTS;
     }
 
-    /**
-     * 还原到初始显示状态
-     *
-     * @param needClearHeader 是否同时清空头部
-     */
-    public void resetUI(boolean needClearHeader) {
-        if (needClearHeader) {
-            setHeader(null);
-        }
-        setFooter(null);
-        OBJECTS.clear();
-        notifyDataSetChanged();
-    }
-
     //头尾相关=======================
 
     /**
@@ -266,7 +252,25 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
      * 尾部显示
      */
     protected void onFooterShow() {
-        if (onFooterShowListener != null)
+        if (onFooterShowListener != null) {
             onFooterShowListener.onFooterShow();
+        }
+    }
+
+    //清除相关=======================
+
+    public void clearAll() {
+        clearAll(true, true);
+    }
+
+    public void clearAll(boolean clearHeader, boolean clearFooter) {
+        if (clearHeader) {
+            setHeader(null);
+        }
+        if (clearFooter) {
+            setFooter(null);
+        }
+        list().clear();
+        notifyDataSetChanged();
     }
 }

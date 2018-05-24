@@ -14,7 +14,7 @@
             android:layout_height="match_parent" />
     </com.xzh.pagerv.refresh.PageSwipeRefreshLayout>
 
-    <com.xzh.pagerv.demo.view.ContentStatusView
+    <com.xzh.pagerv.status.DefaultContentStatusView
         android:id="@+id/csv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

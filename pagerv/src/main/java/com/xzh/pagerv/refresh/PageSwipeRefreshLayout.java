@@ -19,7 +19,7 @@ public class PageSwipeRefreshLayout extends SwipeRefreshLayout implements IPageR
     }
 
     @Override
-    public void setListener(final OnPageRefreshListener listener) {
+    public void setPageRefreshListener(final OnPageRefreshListener listener) {
         setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -29,7 +29,7 @@ public class PageSwipeRefreshLayout extends SwipeRefreshLayout implements IPageR
     }
 
     @Override
-    public void showRefreshView(boolean show) {
+    public void showPageRefreshView(boolean show) {
         setRefreshing(show);
     }
 }
