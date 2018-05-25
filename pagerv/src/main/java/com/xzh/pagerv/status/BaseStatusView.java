@@ -69,6 +69,13 @@ public abstract class BaseStatusView extends RelativeLayout {
     }
 
     /**
+     * 状态控件是否在显示,不代表三种状态在显示
+     */
+    public boolean isShow() {
+        return getVisibility() == VISIBLE;
+    }
+
+    /**
      * 显示进度
      */
     public void progress() {

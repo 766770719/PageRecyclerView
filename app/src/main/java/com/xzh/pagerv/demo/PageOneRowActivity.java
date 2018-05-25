@@ -47,9 +47,9 @@ public class PageOneRowActivity extends Activity {
         prv.init(new LinearLayoutManager(this), true, mAdapter);
 
         //初始化分页Helper:1.可以不要下拉控件，设置为null即可  2.可以不要footer，即为单页数据效果，footer设置为null即可
-        mHelper.init(mAdapter, csv, psrl, new DefaultFooterStatusView(this), this::loadPage);
+        mHelper.init(mAdapter, psrl, csv, new DefaultFooterStatusView(this));
         //开始加载，并设置默认的页标
-        mHelper.start(1, "数据加载中...", "正在获取下一页数据");
+        mHelper.start(1, "数据加载中...", "正在获取下一页数据", this::loadPage);
     }
 
     /**
@@ -60,15 +60,22 @@ public class PageOneRowActivity extends Activity {
     private void loadPage(int page) {
         //测试数据
         prv.postDelayed(() -> {
-            if (page > 3) { //超过3页没有数据了
-                mHelper.loadEmpty(page, "暂无数据信息", "没有更多数据了");
-                //如果失败情况可以使用
-                //mHelper.loadFailed(page,"网络错误！","网络错误，点击重新加载下一页");
-            } else { //有数据
+            if (page == 1) {
+                mAdapter.clearAll();
+            }
+            if (page == 1 && !prv.isSelected()) { //第一页失败
+                mHelper.loadFailed(page, "网络错误！1", "第1次失败", "网络错误，点击重新加载下一页", null);
+                prv.setSelected(true);
+            } else if (page == 2 && prv.isSelected()) { //第二页失败
+                mHelper.loadFailed(page, "网络错误！2", "第2次失败", "网络错误，点击重新加载下一页2", null);
+                prv.setSelected(false);
+            } else if (page > 3) { //空
+                mHelper.loadSuccess(page, null, "第三页空", "尾部第三页空");
+            } else {
                 List<User> users = new ArrayList<>();
                 for (int i = 0; i < 10; i++)
                     users.add(new User(page + "数据" + i + ":" + System.currentTimeMillis()));
-                mHelper.loadSuccess(page, users);
+                mHelper.loadSuccess(page, users, "空else", "尾部空else");
             }
         }, 1500);
     }

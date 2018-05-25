@@ -19,29 +19,38 @@ public abstract class PageHelper<K, T, H> {
 
     //参数
     private PageRecyclerViewAdapter<T, H> adapter;
-    private BaseStatusView contentStatusView;
     private IPageRefreshView pageRefreshView;
+    private BaseStatusView contentStatusView;
     private BaseStatusView footerStatusView;
-    private OnPageListener<K> listener;
-
     //FooterView创建的Holder
     private PageViewHolder mFooterHolder;
+
     //默认页的KEY,当前的Key
-    private K mDefaultKey, mCurrentKey;
+    private K defaultKey, mCurrentKey;
+    //进度消息
+    private String contentProgressMsg, footerProgressMsg;
+    //加载监听
+    private OnPageListener<K> listener;
+
     //是否加载中
     private boolean isLoading = false;
 
     /**
      * 初始化
      */
-    public void init(PageRecyclerViewAdapter<T, H> adapter, BaseStatusView contentStatusView, IPageRefreshView pageRefreshView,
-                     BaseStatusView footerStatusView, OnPageListener<K> listener) {
+    public void init(PageRecyclerViewAdapter<T, H> adapter, IPageRefreshView pageRefreshView, BaseStatusView contentStatusView, BaseStatusView footerStatusView) {
         this.adapter = adapter;
-        this.contentStatusView = contentStatusView;
         this.pageRefreshView = pageRefreshView;
+        this.contentStatusView = contentStatusView;
         this.footerStatusView = footerStatusView;
-        this.listener = listener;
 
+        //初始化下一页加载监听
+        adapter.setOnFooterShowListener(new OnFooterShowListener() {
+            @Override
+            public void onFooterShow() {
+                loadNextPage();
+            }
+        });
         //初始化下拉控件监听
         if (pageRefreshView != null) {
             pageRefreshView.setPageRefreshListener(new OnPageRefreshListener() {
@@ -51,51 +60,48 @@ public abstract class PageHelper<K, T, H> {
                 }
             });
         }
+
+        //初始化状态控件部分
+        if (contentStatusView != null) {
+            contentStatusView.show();
+        }
         if (footerStatusView != null) {
             mFooterHolder = new PageViewHolder(footerStatusView);
+            footerStatusView.show();
         }
-        //初始化下一页加载监听
-        adapter.setOnFooterShowListener(new OnFooterShowListener() {
-            @Override
-            public void onFooterShow() {
-                loadNextPage();
-            }
-        });
     }
 
     /**
      * 开始加载
-     *
-     * @param defaultKey      默认页的Key
-     * @param contentProgress 内容进度信息
-     * @param footerProgress  尾部进度信息
      */
-    public void start(K defaultKey, String contentProgress, String footerProgress) {
+    public void start(K defaultKey, String contentProgressMsg, String footerProgressMsg, OnPageListener<K> listener) {
         //缓存默认的Key
-        this.mDefaultKey = defaultKey;
-        //初始化状态View
-        if (contentStatusView != null) {
-            contentStatusView.progress(contentProgress);
-        }
-        //初始化FooterView
-        if (footerStatusView != null) {
-            footerStatusView.progress(footerProgress);
-        }
+        this.defaultKey = defaultKey;
+        //缓存进度消息
+        this.contentProgressMsg = contentProgressMsg;
+        this.footerProgressMsg = footerProgressMsg;
+        //加载监听
+        this.listener = listener;
+
+        //开始加载默认清空列表
+        adapter.clearAll(false, true);
         //第一次加载类似下拉刷新，只不过不显示下拉刷新的效果
         refresh(false);
     }
 
     /**
      * 刷新
-     *
-     * @param showRefreshView 是否显示下拉刷新控件
      */
     public void refresh(boolean showRefreshView) {
-        if (showRefreshView && pageRefreshView != null) { //需要显示效果，显示效果，不需要显示效果保持当前下拉刷新的显示效果
-            pageRefreshView.showPageRefreshView(true);
+        boolean isContentStatusShow = contentStatusView != null && contentStatusView.isShow();
+        if (isContentStatusShow) { //状态View正在显示，显示进度
+            contentStatusView.progress(contentProgressMsg);
+        }
+        if (pageRefreshView != null) { //状态进度显示,下拉就不显示不管如何触发的刷新
+            pageRefreshView.showPageRefreshView(!isContentStatusShow && showRefreshView);
         }
         //加载第一页数据
-        loadPage(mDefaultKey);
+        loadPage(defaultKey);
     }
 
     /**
@@ -108,7 +114,7 @@ public abstract class PageHelper<K, T, H> {
                 return;
             }
             //设置footer的显示
-            footerStatusView.progress();
+            footerStatusView.progress(footerProgressMsg);
         }
         //加载下一页
         loadPage(getNextPageKey(mCurrentKey, adapter.list()));
@@ -116,8 +122,6 @@ public abstract class PageHelper<K, T, H> {
 
     /**
      * 加载页
-     *
-     * @param key 页Key
      */
     private void loadPage(K key) {
         //判断加载状态
@@ -129,27 +133,24 @@ public abstract class PageHelper<K, T, H> {
 
     /**
      * 加载失败
-     *
-     * @param key           页Key
-     * @param contentFailed 内容失败信息
-     * @param footerFailed  footer失败信息
      */
-    public void loadFailed(K key, String contentFailed, String contentAction, String footerFailed, String footerFailedAction) {
-        if (isFirstPage(key, mDefaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
-            //只通知状态控件失败，不改变其隐藏属性。
-            // 1.第一次加载数据或第一次加载失败后下拉刷新控件本来就是是显示的，直接通知失败即可
-            // 2.加载成功一页数据后，控件被隐藏掉，下拉刷新失败，任然通知失败，此时控件是隐藏的，界面不会发生改变，依然显示现有数据
-            if (contentStatusView != null) {
-                contentStatusView.failed(contentFailed, contentAction, new View.OnClickListener() {
+    public void loadFailed(K key, String contentFailed, String contentFailedAction, String footerFailed, String footerFailedAction) {
+        //隐藏下拉
+        if (pageRefreshView != null) {
+            pageRefreshView.showPageRefreshView(false);
+        }
+
+        if (isFirstPage(key, defaultKey)) { //第一页
+            if (contentStatusView != null && adapter.list().isEmpty()) { //存在状态View并且数据为空,显示失败
+                contentStatusView.failed(contentFailed, contentFailedAction, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         refresh(false);
                     }
                 });
             }
-        } else { //其它页数据:第二页或以上
-            //直接通知footer失败即可
-            if (footerStatusView != null) {
+        } else { //第二页和以后
+            if (footerStatusView != null) { //尾部失败
                 footerStatusView.failed(footerFailed, footerFailedAction, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -158,65 +159,51 @@ public abstract class PageHelper<K, T, H> {
                 });
             }
         }
-        if (pageRefreshView != null) {
-            pageRefreshView.showPageRefreshView(false);
-        }
-        isLoading = false;
-    }
 
-    /**
-     * 加载空
-     *
-     * @param key 页Key
-     */
-    public void loadEmpty(K key, String contentEmpty, String footerEmpty) {
-        if (isFirstPage(key, mDefaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
-            adapter.clearAll(false, true);
-            if (contentStatusView != null) {
-                contentStatusView.show().empty(contentEmpty);
-            }
-        } else { //其它页数据:第二页或以上
-            if (footerStatusView != null) {
-                footerStatusView.empty(footerEmpty);
-            }
-        }
-        if (pageRefreshView != null) {
-            pageRefreshView.showPageRefreshView(false);
-        }
+        //缓存数据
         isLoading = false;
     }
 
     /**
      * 加载成功
-     *
-     * @param key  页Key
-     * @param data 数据列表
      */
-    public void loadSuccess(K key, List<T> data) {
-        List<T> list = adapter.list();
-        if (isFirstPage(key, mDefaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
-            if (contentStatusView != null) {
-                contentStatusView.hidden();
-            }
-            if (footerStatusView != null) {
-                footerStatusView.progress("sdfasdf");
-            }
-            adapter.setFooter(mFooterHolder);
-            list.clear();
-            list.addAll(data);
-            adapter.notifyDataSetChanged();
-        } else { //其它页数据:第二页或以上
-            int curSize = list.size();
-            list.addAll(data);
-            //通知插入,Footer改变
-            adapter.notifyItemRangeInserted(curSize, data.size());
-            adapter.notifyItemChanged(adapter.getItemCount() - 1);
-        }
-        //缓存Key
-        mCurrentKey = key;
+    public void loadSuccess(K key, List<T> data, String contentEmpty, String footerEmpty) {
+        //隐藏下拉
         if (pageRefreshView != null) {
             pageRefreshView.showPageRefreshView(false);
         }
+
+        //数据处理
+        boolean isEmpty = data == null || data.isEmpty();
+        if (isFirstPage(key, defaultKey)) { //第一页
+            adapter.clearAll(false, true); //先清空所有数据
+            if (contentStatusView != null) { //处理内容状态控件
+                if (isEmpty) contentStatusView.empty(contentEmpty);
+                else contentStatusView.hidden();
+            }
+            if (footerStatusView != null) { //改变尾部状态控件
+                footerStatusView.progress(footerProgressMsg);
+            }
+            if (!isEmpty) { //数据不为空添加尾部和数据
+                adapter.setFooter(mFooterHolder);
+                adapter.list().addAll(data);
+                adapter.notifyDataSetChanged();
+            }
+        } else { //第二页和以后
+            if (footerStatusView != null) { //改变尾部状态
+                if (isEmpty) footerStatusView.empty(footerEmpty);
+                else footerStatusView.progress(footerProgressMsg);
+            }
+            if (!isEmpty) { //不为空,添加数据
+                int curSize = adapter.list().size();
+                adapter.list().addAll(data);
+                adapter.notifyItemRangeInserted(curSize, data.size()); //通知插入
+                adapter.notifyItemChanged(adapter.getItemCount() - 1); //通知尾部改变
+            }
+        }
+
+        //缓存数据
+        mCurrentKey = key;
         isLoading = false;
     }
 
