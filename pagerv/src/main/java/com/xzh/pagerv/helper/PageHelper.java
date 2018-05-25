@@ -140,13 +140,13 @@ public abstract class PageHelper<K, T, H> {
      * @param contentFailed 内容失败信息
      * @param footerFailed  footer失败信息
      */
-    public void loadFailed(K key, String contentFailed, String footerFailed) {
+    public void loadFailed(K key, String contentFailed, String contentAction, String footerFailed, String footerFailedAction) {
         if (isFirstPage(key, mDefaultKey)) { //第一页数据：第一次进入加载或下拉刷新加载
             //只通知状态控件失败，不改变其隐藏属性。
             // 1.第一次加载数据或第一次加载失败后下拉刷新控件本来就是是显示的，直接通知失败即可
             // 2.加载成功一页数据后，控件被隐藏掉，下拉刷新失败，任然通知失败，此时控件是隐藏的，界面不会发生改变，依然显示现有数据
             if (contentStatusView != null) {
-                contentStatusView.failed(contentFailed, new View.OnClickListener() {
+                contentStatusView.failed(contentFailed, contentAction, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         refresh(false);
@@ -156,7 +156,7 @@ public abstract class PageHelper<K, T, H> {
         } else { //其它页数据:第二页或以上
             //直接通知footer失败即可
             if (footerStatusView != null) {
-                footerStatusView.failed(footerFailed, new View.OnClickListener() {
+                footerStatusView.failed(footerFailed, footerFailedAction, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         loadNextPage();

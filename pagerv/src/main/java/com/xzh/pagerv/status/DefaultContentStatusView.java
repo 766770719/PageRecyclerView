@@ -2,8 +2,8 @@ package com.xzh.pagerv.status;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.xzh.pagerv.R;
@@ -18,7 +18,7 @@ public class DefaultContentStatusView extends BaseStatusView {
 
     private ViewGroup vg_failed;
     private TextView tv_failed;
-    private View v_failed_retry;
+    private Button btn_failed_retry;
 
     private ViewGroup vg_empty;
     private TextView tv_empty;
@@ -46,31 +46,30 @@ public class DefaultContentStatusView extends BaseStatusView {
 
         vg_failed = findViewById(R.id.vg_failed);
         tv_failed = findViewById(R.id.tv_failed);
-        v_failed_retry = findViewById(R.id.v_failed_retry);
+        btn_failed_retry = findViewById(R.id.btn_failed_retry);
 
         vg_empty = findViewById(R.id.vg_empty);
         tv_empty = findViewById(R.id.tv_empty);
-
-        show();
     }
 
     @Override
     public void progress(String msg) {
-        hideAllStatus();
+        show().hideAllStatus();
         vg_progress.setVisibility(VISIBLE);
     }
 
     @Override
-    public void failed(int imgRes, String msg, OnClickListener retryListener) {
-        hideAllStatus();
+    public void failed(int imgRes, String msg, String action, OnClickListener actionListener) {
+        show().hideAllStatus();
         vg_failed.setVisibility(VISIBLE);
         tv_failed.setText(msg);
-        v_failed_retry.setOnClickListener(retryListener);
+        btn_failed_retry.setText(action);
+        btn_failed_retry.setOnClickListener(actionListener);
     }
 
     @Override
     public void empty(String msg) {
-        hideAllStatus();
+        show().hideAllStatus();
         vg_empty.setVisibility(VISIBLE);
         tv_empty.setText(msg);
     }

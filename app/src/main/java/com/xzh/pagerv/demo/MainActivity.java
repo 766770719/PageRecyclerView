@@ -5,16 +5,39 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.xzh.pagerv.status.DefaultContentStatusView;
+import com.xzh.pagerv.status.DefaultFooterStatusView;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends Activity {
+
+    @BindView(R.id.dcsv)
+    DefaultContentStatusView dcsv;
+    @BindView(R.id.dfsv)
+    DefaultFooterStatusView dfsv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        dcsv.progress("kaishi");
+        dcsv.empty("空");
+        dcsv.failed("网络异常", "再次请求", v -> {
+            dcsv.progress("请求中");
+        });
+        dcsv.hidden();
+
+        dfsv.progress("加载中...");
+        dfsv.empty("没有数据了");
+        dfsv.failed("网络错误,点击重新加载", null, v -> {
+            dfsv.progress("加载中1...");
+        });
+        dfsv.hidden();
     }
 
     @OnClick({R.id.v_one_row, R.id.v_two_row, R.id.v_page_one_row})

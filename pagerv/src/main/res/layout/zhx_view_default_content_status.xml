@@ -31,7 +31,7 @@
             android:textSize="14sp" />
 
         <Button
-            android:id="@+id/v_failed_retry"
+            android:id="@+id/btn_failed_retry"
             android:layout_width="110dp"
             android:layout_height="32dp"
             android:layout_marginTop="6dp"

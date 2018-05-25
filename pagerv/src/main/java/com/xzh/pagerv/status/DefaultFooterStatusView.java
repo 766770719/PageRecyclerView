@@ -49,28 +49,26 @@ public class DefaultFooterStatusView extends BaseStatusView {
 
         vg_empty = findViewById(R.id.vg_empty);
         tv_empty = findViewById(R.id.tv_empty);
-
-        show();
     }
 
     @Override
     public void progress(String msg) {
-        hideAllStatus();
+        show().hideAllStatus();
         vg_progress.setVisibility(VISIBLE);
         tv_progress.setText(msg);
     }
 
     @Override
-    public void failed(int imgRes, String msg, OnClickListener retryListener) {
-        hideAllStatus();
+    public void failed(int imgRes, String msg, String action, OnClickListener actionListener) {
+        show().hideAllStatus();
         vg_failed.setVisibility(VISIBLE);
         tv_failed.setText(msg);
-        vg_failed.setOnClickListener(retryListener);
+        vg_failed.setOnClickListener(actionListener);
     }
 
     @Override
     public void empty(String msg) {
-        hideAllStatus();
+        show().hideAllStatus();
         vg_empty.setVisibility(VISIBLE);
         tv_empty.setText(msg);
     }

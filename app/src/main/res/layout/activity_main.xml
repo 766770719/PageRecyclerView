@@ -27,6 +27,16 @@
             android:layout_height="wrap_content"
             android:text="带分页单行样式" />
 
+        <com.xzh.pagerv.status.DefaultContentStatusView
+            android:id="@+id/dcsv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.xzh.pagerv.status.DefaultFooterStatusView
+            android:id="@+id/dfsv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
 

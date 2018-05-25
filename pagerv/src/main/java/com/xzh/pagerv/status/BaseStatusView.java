@@ -83,14 +83,14 @@ public abstract class BaseStatusView extends FrameLayout {
     /**
      * 显示失败
      */
-    public void failed(String msg, OnClickListener retryListener) {
-        failed(-1, msg, retryListener);
+    public void failed(String msg, String action, OnClickListener actionListener) {
+        failed(-1, msg, action, actionListener);
     }
 
     /**
      * 显示失败
      */
-    public abstract void failed(int imgRes, String msg, OnClickListener retryListener);
+    public abstract void failed(int imgRes, String msg, String action, OnClickListener actionListener);
 
     /**
      * 显示空
