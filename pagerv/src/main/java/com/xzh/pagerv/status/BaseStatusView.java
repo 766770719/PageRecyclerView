@@ -5,13 +5,13 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 /**
- * 基础分页状态View
+ * 基础分页状态View,此处必须用RelativeLayout,不然new创建无法填充RecyclerView宽度
  * Created by xiezihao on 16/12/6.
  */
-public abstract class BaseStatusView extends FrameLayout {
+public abstract class BaseStatusView extends RelativeLayout {
 
     public BaseStatusView(Context context) {
         super(context);

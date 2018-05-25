@@ -33,12 +33,6 @@ public abstract class PageHelper<K, T, H> {
 
     /**
      * 初始化
-     *
-     * @param adapter           适配器
-     * @param contentStatusView 状态View
-     * @param pageRefreshView   下拉刷新
-     * @param footerStatusView  Footer
-     * @param listener          监听
      */
     public void init(PageRecyclerViewAdapter<T, H> adapter, BaseStatusView contentStatusView, IPageRefreshView pageRefreshView,
                      BaseStatusView footerStatusView, OnPageListener<K> listener) {
