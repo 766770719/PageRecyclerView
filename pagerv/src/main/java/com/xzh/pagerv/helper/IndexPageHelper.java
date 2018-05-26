@@ -9,12 +9,12 @@ import java.util.List;
 public class IndexPageHelper<T, H> extends PageHelper<Integer, T, H> {
 
     @Override
-    protected boolean isFirstPage(Integer key, Integer defaultKey) {
+    public boolean isFirstPage(Integer key, Integer defaultKey) {
         return key.equals(defaultKey);
     }
 
     @Override
-    protected Integer getNextPageKey(Integer key, List<T> data) {
+    public Integer getNextPageKey(Integer key, List<T> data) {
         return key + 1;
     }
 }

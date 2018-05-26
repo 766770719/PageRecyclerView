@@ -44,6 +44,8 @@ public abstract class PageHelper<K, T, H> {
         this.contentStatusView = contentStatusView;
         this.footerStatusView = footerStatusView;
 
+        //初始化默认清空列表数据
+        adapter.clearAll(false, true);
         //初始化下一页加载监听
         adapter.setOnFooterShowListener(new OnFooterShowListener() {
             @Override
@@ -51,6 +53,7 @@ public abstract class PageHelper<K, T, H> {
                 loadNextPage();
             }
         });
+
         //初始化下拉控件监听
         if (pageRefreshView != null) {
             pageRefreshView.setPageRefreshListener(new OnPageRefreshListener() {
@@ -83,8 +86,6 @@ public abstract class PageHelper<K, T, H> {
         //加载监听
         this.listener = listener;
 
-        //开始加载默认清空列表
-        adapter.clearAll(false, true);
         //第一次加载类似下拉刷新，只不过不显示下拉刷新的效果
         refresh(false);
     }
@@ -93,12 +94,14 @@ public abstract class PageHelper<K, T, H> {
      * 刷新
      */
     public void refresh(boolean showRefreshView) {
-        boolean isContentStatusShow = contentStatusView != null && contentStatusView.isShow();
-        if (isContentStatusShow) { //状态View正在显示，显示进度
-            contentStatusView.progress(contentProgressMsg);
+        boolean isShowContentStatus = contentStatusView != null && contentStatusView.isShow() && adapter.list().isEmpty();
+        if (isShowContentStatus) {
+            contentStatusView.progress(contentProgressMsg); //状态View需要显示，显示进度
+        } else {
+            if (contentStatusView != null) contentStatusView.hidden(); //隐藏状态View
         }
         if (pageRefreshView != null) { //状态进度显示,下拉就不显示不管如何触发的刷新
-            pageRefreshView.showPageRefreshView(!isContentStatusShow && showRefreshView);
+            pageRefreshView.showPageRefreshView(!isShowContentStatus && showRefreshView);
         }
         //加载第一页数据
         loadPage(defaultKey);
@@ -214,7 +217,7 @@ public abstract class PageHelper<K, T, H> {
      * @param defaultKey 第一页Key
      * @return true 是第一页
      */
-    protected abstract boolean isFirstPage(K key, K defaultKey);
+    public abstract boolean isFirstPage(K key, K defaultKey);
 
     /**
      * 获取下一页
@@ -223,5 +226,5 @@ public abstract class PageHelper<K, T, H> {
      * @param data 当前数据列表
      * @return 下一页的key
      */
-    protected abstract K getNextPageKey(K key, List<T> data);
+    public abstract K getNextPageKey(K key, List<T> data);
 }
