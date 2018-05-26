@@ -227,6 +227,20 @@ public abstract class PageHelper<K, T, H> {
     }
 
     /**
+     * 获取内容状态消息
+     */
+    public String getContentProgressMsg() {
+        return contentProgressMsg;
+    }
+
+    /**
+     * 获取尾部状态消息
+     */
+    public String getFooterProgressMsg() {
+        return footerProgressMsg;
+    }
+
+    /**
      * 设置默认Key
      */
     public void setDefaultKey(K defaultKey) {
