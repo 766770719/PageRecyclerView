@@ -225,10 +225,24 @@ public abstract class PageHelper<K, T, H> {
     }
 
     /**
+     * 设置默认Key
+     */
+    public void setDefaultKey(K defaultKey) {
+        this.defaultKey = defaultKey;
+    }
+
+    /**
      * 获取默认页Key
      */
     public K getDefaultKey() {
         return defaultKey;
+    }
+
+    /**
+     * 设置当前Key
+     */
+    public void setCurrentKey(K currentKey) {
+        this.mCurrentKey = currentKey;
     }
 
     /**
