@@ -77,7 +77,7 @@ public abstract class PageHelper<K, T, H> {
     /**
      * 开始加载
      */
-    public void start(K defaultKey, String contentProgressMsg, String footerProgressMsg, OnPageListener<K> listener) {
+    public void start(K defaultKey, String contentProgressMsg, String footerProgressMsg, OnPageListener<K> listener, boolean showRefreshView) {
         //缓存默认的Key
         this.defaultKey = defaultKey;
         //缓存进度消息
@@ -86,8 +86,8 @@ public abstract class PageHelper<K, T, H> {
         //加载监听
         this.listener = listener;
 
-        //第一次加载类似下拉刷新，只不过不显示下拉刷新的效果
-        refresh(false);
+        //第一次加载类似下拉刷新
+        refresh(showRefreshView);
     }
 
     /**
