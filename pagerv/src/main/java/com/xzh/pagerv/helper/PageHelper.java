@@ -38,11 +38,16 @@ public abstract class PageHelper<K, T, H> {
     /**
      * 初始化
      */
-    public void init(PageRecyclerViewAdapter<T, H> adapter, IPageRefreshView pageRefreshView, BaseStatusView contentStatusView, BaseStatusView footerStatusView) {
+    public void init(PageRecyclerViewAdapter<T, H> adapter, IPageRefreshView pageRefreshView, BaseStatusView contentStatusView, BaseStatusView footerStatusView,
+                     String contentProgressMsg, String footerProgressMsg) {
+        //缓存控件
         this.adapter = adapter;
         this.pageRefreshView = pageRefreshView;
         this.contentStatusView = contentStatusView;
         this.footerStatusView = footerStatusView;
+        //缓存进度消息
+        this.contentProgressMsg = contentProgressMsg;
+        this.footerProgressMsg = footerProgressMsg;
 
         //初始化默认清空列表数据
         adapter.clearAll(false, true);
@@ -66,23 +71,20 @@ public abstract class PageHelper<K, T, H> {
 
         //初始化状态控件部分
         if (contentStatusView != null) {
-            contentStatusView.show();
+            contentStatusView.progress(contentProgressMsg);
         }
         if (footerStatusView != null) {
             mFooterHolder = new PageViewHolder(footerStatusView);
-            footerStatusView.show();
+            footerStatusView.progress(footerProgressMsg);
         }
     }
 
     /**
      * 开始加载
      */
-    public void start(K defaultKey, String contentProgressMsg, String footerProgressMsg, OnPageListener<K> listener, boolean showRefreshView) {
+    public void start(K defaultKey, OnPageListener<K> listener, boolean showRefreshView) {
         //缓存默认的Key
         this.defaultKey = defaultKey;
-        //缓存进度消息
-        this.contentProgressMsg = contentProgressMsg;
-        this.footerProgressMsg = footerProgressMsg;
         //加载监听
         this.listener = listener;
 
