@@ -211,6 +211,27 @@ public abstract class PageHelper<K, T, H> {
     }
 
     /**
+     * 获取尾部的Holder
+     */
+    public PageViewHolder getFooterHolder() {
+        return mFooterHolder;
+    }
+
+    /**
+     * 获取默认页Key
+     */
+    public K getDefaultKey() {
+        return defaultKey;
+    }
+
+    /**
+     * 获取当前页Key
+     */
+    public K getCurrentKey() {
+        return mCurrentKey;
+    }
+
+    /**
      * 是否是第一页
      *
      * @param key        当前key
