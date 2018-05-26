@@ -47,9 +47,10 @@ public class PageOneRowActivity extends Activity {
         prv.init(new LinearLayoutManager(this), true, mAdapter);
 
         //初始化分页Helper:1.可以不要下拉控件，设置为null即可  2.可以不要footer，即为单页数据效果，footer设置为null即可
-        mHelper.init(mAdapter, psrl, csv, new DefaultFooterStatusView(this));
+        mHelper.init(mAdapter, psrl, csv, new DefaultFooterStatusView(this),
+                "数据加载中...", "正在获取下一页数据");
         //开始加载，并设置默认的页标
-        mHelper.start(1, "数据加载中...", "正在获取下一页数据", this::loadPage, false);
+        mHelper.start(1, this::loadPage, false);
     }
 
     /**
