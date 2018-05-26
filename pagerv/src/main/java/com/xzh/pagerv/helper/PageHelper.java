@@ -211,6 +211,13 @@ public abstract class PageHelper<K, T, H> {
     }
 
     /**
+     * 获取尾部状态View
+     */
+    public BaseStatusView getFooterStatusView() {
+        return footerStatusView;
+    }
+
+    /**
      * 获取尾部的Holder
      */
     public PageViewHolder getFooterHolder() {
