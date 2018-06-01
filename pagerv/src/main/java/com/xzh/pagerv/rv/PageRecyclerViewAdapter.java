@@ -17,39 +17,6 @@ import java.util.List;
  */
 public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter<PageViewHolder> {
 
-    private int[] layoutIDs;
-    private int[] clickViewIDs;
-
-    /**
-     * 单样式构造函数,整行点击
-     *
-     * @param layoutID 布局ID
-     */
-    public PageRecyclerViewAdapter(int layoutID) {
-        this(layoutID, 0);
-    }
-
-    /**
-     * 单样式构造函数
-     *
-     * @param layoutID    布局ID
-     * @param clickViewID 点击ViewID，0整行，-1不设置
-     */
-    public PageRecyclerViewAdapter(int layoutID, int clickViewID) {
-        this(new int[]{layoutID}, new int[]{clickViewID});
-    }
-
-    /**
-     * 多样式构造函数
-     *
-     * @param layoutIDs    布局IDs
-     * @param clickViewIDs 点击ViewIDs，0整行，-1不设置，其它对应的View，和布局对应
-     */
-    public PageRecyclerViewAdapter(int[] layoutIDs, int[] clickViewIDs) {
-        this.layoutIDs = layoutIDs;
-        this.clickViewIDs = clickViewIDs;
-    }
-
     @Override
     public int getItemCount() {
         return OBJECTS.size() + (mFooterHolder == null ? 0 : 1) + (mHeaderHolder == null ? 0 : 1);
@@ -59,7 +26,7 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
      * 判断应该显示的布局
      *
      * @param position 数据的位置
-     * @return 当前数据对应的布局下标，和传入的布局列表对应
+     * @return 当前数据对应的布局ID, 用布局ID代表类型
      */
     @Override
     public final int getItemViewType(int position) {
@@ -68,36 +35,21 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
         } else if (isHeader(position)) { //Header的位置
             return VIEW_TYPE_HEADER;
         }
-        return getLayoutIndex(OBJECTS.get(getDataPosition(position)));
-    }
-
-    /**
-     * 获取布局的下标
-     *
-     * @param obj 数据类型
-     * @return 对应数据的布局下标
-     */
-    public int getLayoutIndex(T obj) {
-        return 0;
+        return getLayoutId(OBJECTS.get(getDataPosition(position)));
     }
 
     @Override
-    public PageViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        if (viewType == VIEW_TYPE_FOOTER) { //是Footer
+    public PageViewHolder onCreateViewHolder(ViewGroup viewGroup, int layoutId) {
+        if (layoutId == VIEW_TYPE_FOOTER) { //是Footer
             return mFooterHolder;
-        } else if (viewType == VIEW_TYPE_HEADER) { //是Header
+        } else if (layoutId == VIEW_TYPE_HEADER) { //是Header
             return mHeaderHolder;
         }
 
-        if (viewType < 0 || viewType >= layoutIDs.length) { //不合法viewType,不在布局数组长度内
-            throw new ArrayIndexOutOfBoundsException("getItemViewType的返回值不在传入的布局数组长度范围内");
-        }
-
         //必须传入parent来inflate布局，不然item的match_parent无效
-        int layoutID = layoutIDs[viewType];
-        View root = LayoutInflater.from(viewGroup.getContext()).inflate(layoutID, viewGroup, false);
-        PageViewHolder holder = getViewHolder(root, layoutID);
-        int clickViewID = clickViewIDs[viewType];
+        View root = LayoutInflater.from(viewGroup.getContext()).inflate(layoutId, viewGroup, false);
+        PageViewHolder holder = getViewHolder(root, layoutId);
+        int clickViewID = getClickViewId(layoutId);
         if (clickViewID == 0) { //整行点击
             holder.clickView = root;
         } else { //其它
@@ -107,6 +59,16 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
             holder.clickView.setOnClickListener(mClickListener);
         }
         return holder;
+    }
+
+    /**
+     * 获取布局的点击方式,默认整行点击
+     *
+     * @param layoutId 布局ID
+     * @return 可点击View的Id, 0整行,-1不点击
+     */
+    public int getClickViewId(int layoutId) {
+        return 0;
     }
 
     @Override
@@ -155,6 +117,14 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
     }
 
     //抽象方法=======================
+
+    /**
+     * 获取布局的下标
+     *
+     * @param obj 数据类型
+     * @return 对应数据的布局下标
+     */
+    public abstract int getLayoutId(T obj);
 
     /**
      * 获取ViewHolder

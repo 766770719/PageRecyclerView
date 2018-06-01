@@ -46,9 +46,13 @@ public class OneRowActivity extends Activity {
         mAdapter.notifyDataSetChanged();
     }
 
-    //Adapter:第二个参数表示如何触发onItemClick,-1:不可点击不触发,0或不填整行触发，控件ID点击这个控件才会触发
-    private PageRecyclerViewAdapter<User, ViewHolder> mAdapter
-            = new PageRecyclerViewAdapter<User, ViewHolder>(R.layout.item_one_row, 0) {
+    //Adapter
+    private PageRecyclerViewAdapter<User, ViewHolder> mAdapter = new PageRecyclerViewAdapter<User, ViewHolder>() {
+        @Override
+        public int getLayoutId(User obj) {
+            return R.layout.item_one_row;
+        }
+
         @Override
         protected PageViewHolder getViewHolder(View root, int index) {
             return new ViewHolder(root);

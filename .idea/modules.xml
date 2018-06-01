@@ -2,10 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/PageRecyclerView.iml" filepath="$PROJECT_DIR$/.idea/PageRecyclerView.iml" />
       <module fileurl="file://$PROJECT_DIR$/PageRecyclerView.iml" filepath="$PROJECT_DIR$/PageRecyclerView.iml" />
+      <module fileurl="file://D:\WorkSoft\Android\AndroidStudioProjects\PageRecyclerView\PageRecyclerView.iml" filepath="D:\WorkSoft\Android\AndroidStudioProjects\PageRecyclerView\PageRecyclerView.iml" />
+      <module fileurl="file://D:\WorkSoft\Android\AndroidStudioProjects\PageRecyclerView\.idea\PageRecyclerView.iml" filepath="D:\WorkSoft\Android\AndroidStudioProjects\PageRecyclerView\.idea\PageRecyclerView.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://D:\WorkSoft\Android\AndroidStudioProjects\PageRecyclerView\app\app.iml" filepath="D:\WorkSoft\Android\AndroidStudioProjects\PageRecyclerView\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/pagerv/pagerv.iml" filepath="$PROJECT_DIR$/pagerv/pagerv.iml" />
+      <module fileurl="file://D:\WorkSoft\Android\AndroidStudioProjects\PageRecyclerView\pagerv\pagerv.iml" filepath="D:\WorkSoft\Android\AndroidStudioProjects\PageRecyclerView\pagerv\pagerv.iml" />
     </modules>
   </component>
 </project>

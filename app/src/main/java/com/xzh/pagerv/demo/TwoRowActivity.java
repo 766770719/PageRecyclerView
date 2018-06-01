@@ -53,17 +53,21 @@ public class TwoRowActivity extends Activity {
         mAdapter.notifyDataSetChanged();
     }
 
-    //可使用触发onItemClick的ViewID,也可使用0(整行点击触发),-1(不可点击触发)
-    private PageRecyclerViewAdapter<Object, PageViewHolder> mAdapter
-            = new PageRecyclerViewAdapter<Object, PageViewHolder>(new int[]{R.layout.item_two_row_1, R.layout.item_two_row_2},
-            new int[]{R.id.v_click_1, R.id.v_click_2}) {
+    //可使用触发onItemClick的ViewID
+    private PageRecyclerViewAdapter<Object, PageViewHolder> mAdapter = new PageRecyclerViewAdapter<Object, PageViewHolder>() {
 
         @Override
-        public int getLayoutIndex(Object obj) {
-            //和上面构造函数传入的数据列表下标对应
-            //是Pet，使用布局的下标为1，不是Pet使用布局的下标为0
-            //Ps:obj可以是同一对象，通过对象属性区分使用哪个layout也是一样,比如通过User的name属性来确定应该使用的布局,构造函数的T类型就可以改成User
-            return isPet(obj) ? 1 : 0;
+        public int getLayoutId(Object obj) {
+            return isPet(obj) ? R.layout.item_two_row_2 : R.layout.item_two_row_1;
+        }
+
+        @Override
+        public int getClickViewId(int layoutId) {
+            if (layoutId == R.layout.item_two_row_1)
+                return R.id.v_click_1;
+            else if (layoutId == R.layout.item_two_row_2)
+                return R.id.v_click_2;
+            return super.getClickViewId(layoutId);
         }
 
         @Override
