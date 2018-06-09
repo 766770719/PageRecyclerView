@@ -8,7 +8,7 @@ import android.view.View;
  */
 public class PageViewHolder extends RecyclerView.ViewHolder {
 
-    //可点击的View缓存
+    //可点击的View缓存,tag用于点击位置缓存
     public View clickView;
 
     public PageViewHolder(View view) {
