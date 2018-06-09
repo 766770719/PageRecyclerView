@@ -30,7 +30,7 @@ public class PageRecyclerView extends RecyclerView {
      * @param hasFixedSize  是否是固定高度
      * @param adapter       重写后的适配器
      */
-    public void init(LayoutManager layoutManager, boolean hasFixedSize, PageRecyclerViewAdapter adapter) {
+    public void init(LayoutManager layoutManager, boolean hasFixedSize, RecyclerView.Adapter adapter) {
         //RV配置
         setLayoutManager(layoutManager);
         setHasFixedSize(hasFixedSize);
