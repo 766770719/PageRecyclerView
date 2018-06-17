@@ -230,6 +230,10 @@ public abstract class PageHelper<K, T, H> {
         return mFooterHolder;
     }
 
+    public void setFooterHolder(PageViewHolder footerHolder) {
+        this.mFooterHolder = footerHolder;
+    }
+
     /**
      * 获取内容状态消息
      */
@@ -271,6 +275,7 @@ public abstract class PageHelper<K, T, H> {
     public K getCurrentKey() {
         return mCurrentKey;
     }
+
 
     /**
      * 是否是第一页
