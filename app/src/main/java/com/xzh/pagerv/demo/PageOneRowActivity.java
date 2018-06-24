@@ -84,7 +84,7 @@ public class PageOneRowActivity extends Activity {
     //Adapter
     private PageRecyclerViewAdapter<User, ViewHolder> mAdapter = new PageRecyclerViewAdapter<User, ViewHolder>() {
         @Override
-        public int getLayoutId(User obj) {
+        public int getLayoutId(User obj, int position) {
             return R.layout.item_one_row;
         }
 

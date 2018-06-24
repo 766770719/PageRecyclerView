@@ -35,7 +35,8 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
         } else if (isHeader(position)) { //Header的位置
             return VIEW_TYPE_HEADER;
         }
-        return getLayoutId(OBJECTS.get(getDataPosition(position)));
+        int dataPosition = getDataPosition(position);
+        return getLayoutId(OBJECTS.get(dataPosition), dataPosition);
     }
 
     @Override
@@ -121,16 +122,16 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
     /**
      * 获取布局的下标
      *
-     * @param obj 数据类型
+     * @param obj      数据类型
+     * @param position 数据位置
      * @return 对应数据的布局下标
      */
-    public abstract int getLayoutId(T obj);
+    public abstract int getLayoutId(T obj, int position);
 
     /**
      * 获取ViewHolder
      *
-     * @param root     Holder绑定的View对象
-     * @param layoutID 布局的ID
+     * @param root Holder绑定的View对象
      * @return ItemHolder
      */
     protected abstract PageViewHolder getViewHolder(View root, int layoutID);
@@ -196,7 +197,7 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
      *
      * @param position 数据位置
      */
-    private boolean isFooter(int position) {
+    public boolean isFooter(int position) {
         return mFooterHolder != null && position == getItemCount() - 1; //Footer存在并且是最后的数据了
     }
 
@@ -205,7 +206,7 @@ public abstract class PageRecyclerViewAdapter<T, H> extends RecyclerView.Adapter
      *
      * @param position 数据位置
      */
-    private boolean isHeader(int position) {
+    public boolean isHeader(int position) {
         return mHeaderHolder != null && position == 0; //Header存在并且是第一个数据
     }
 

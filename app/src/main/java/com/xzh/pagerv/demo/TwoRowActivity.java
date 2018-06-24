@@ -57,7 +57,7 @@ public class TwoRowActivity extends Activity {
     private PageRecyclerViewAdapter<Object, PageViewHolder> mAdapter = new PageRecyclerViewAdapter<Object, PageViewHolder>() {
 
         @Override
-        public int getLayoutId(Object obj) {
+        public int getLayoutId(Object obj, int position) {
             return isPet(obj) ? R.layout.item_two_row_2 : R.layout.item_two_row_1;
         }
 
