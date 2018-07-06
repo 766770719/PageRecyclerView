@@ -20,5 +20,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+    // provide compileOnly
     implementation 'com.android.support:recyclerview-v7:27.1.1'
 }
